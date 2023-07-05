@@ -17,7 +17,8 @@ classifiers = [
     "License :: OSI Approved :: AGPL-3.0 License",
     "Operating System :: OS Independent",
 ]
+dependencies = []
 
 [project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+"Homepage" = "https://github.com/mundialis/grass-gis-helpers"
+"Bug Tracker" = "https://github.com/mundialis/grass-gis-helpers/issues"

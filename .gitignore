@@ -12,3 +12,5 @@ docs/api/*
 docs/site/*
 cover/*
 MANIFEST
+
+*__pycache__*
