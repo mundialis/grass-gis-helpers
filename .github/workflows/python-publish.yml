@@ -8,9 +8,10 @@ jobs:
   lint:
     uses: mundialis/github-workflows/.github/workflows/python-publish.yml@python-publish
     with:
-      repository_url: https://test.pypi.org/legacy/
-      password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      test_pypi: true
+      # password: ${{ secrets.TEST_PYPI_API_TOKEN }}
       # password: ${{ secrets.PYPI_API_TOKEN }}
+    secrets: inherit
 
 #
 # on:
