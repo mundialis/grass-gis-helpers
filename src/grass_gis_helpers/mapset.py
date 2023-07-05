@@ -39,23 +39,23 @@ def switch_to_new_mapset(new_mapset):
     location = env["LOCATION_NAME"]
     old_mapset = env["MAPSET"]
 
-    grass.message("New mapset. %s" % new_mapset)
+    grass.message(_(f"New mapset {new_mapset}"))
     grass.utils.try_rmdir(os.path.join(gisdbase, location, new_mapset))
 
     gisrc = os.environ["GISRC"]
-    newgisrc = "%s_%s" % (gisrc, str(os.getpid()))
+    newgisrc = f"{gisrc}_{os.getpid()}"
     grass.try_remove(newgisrc)
     shutil.copyfile(gisrc, newgisrc)
     os.environ["GISRC"] = newgisrc
 
-    grass.message("GISRC: %s" % os.environ["GISRC"])
+    grass.message(f"GISRC: {os.environ['GISRC']}")
     grass.run_command("g.mapset", flags="c", mapset=new_mapset)
 
     # verify that switching of the mapset worked
     cur_mapset = grass.gisenv()["MAPSET"]
     if cur_mapset != new_mapset:
         grass.fatal(
-            "new mapset is %s, but should be %s" % (cur_mapset, new_mapset)
+            f"new mapset is {cur_mapset}, but should be {new_mapset}"
         )
     return gisrc, newgisrc, old_mapset
 
