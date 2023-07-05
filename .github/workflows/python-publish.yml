@@ -1,5 +1,9 @@
 name: Upload Python Package
 
+on:
+  release:
+    types: [published]
+
 jobs:
   lint:
     uses: mundialis/github-workflows/.github/workflows/python-publish.yml@python-publish
