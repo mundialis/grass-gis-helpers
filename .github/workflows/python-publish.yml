@@ -9,6 +9,7 @@ jobs:
     uses: mundialis/github-workflows/.github/workflows/python-publish.yml@python-publish
     with:
       test_pypi: true
+    secrets:
       PYPI_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
       # password: ${{ secrets.TEST_PYPI_API_TOKEN }}
       # password: ${{ secrets.PYPI_API_TOKEN }}
