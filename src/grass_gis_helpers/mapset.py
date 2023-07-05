@@ -54,9 +54,7 @@ def switch_to_new_mapset(new_mapset):
     # verify that switching of the mapset worked
     cur_mapset = grass.gisenv()["MAPSET"]
     if cur_mapset != new_mapset:
-        grass.fatal(
-            f"new mapset is {cur_mapset}, but should be {new_mapset}"
-        )
+        grass.fatal(f"new mapset is {cur_mapset}, but should be {new_mapset}")
     return gisrc, newgisrc, old_mapset
 
 
