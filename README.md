@@ -3,21 +3,22 @@
 This library includes functions which [mundialis](https://www.mundialis.de/)
 uses in different GRASS GIS addons.
 
-## DEV setup
+## Installation
 
+```bash
+pip install grass-gis-helpers
 ```
-pip3 install -e .
 
-```
+## Small example
 
 ```python3
 from grass_gis_helpers import general
 general.set_nprocs(2)
 ```
 
+## DEV setup
 
-## Generating distribution archives
-```
-python3 -m pip install --upgrade build
-python3 -m build
+```bash
+pip3 install -e .
+
 ```
