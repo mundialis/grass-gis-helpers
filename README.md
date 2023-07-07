@@ -2,6 +2,8 @@
 
 This library provides functions which can be used for developing GRASS GIS addons and which are used by [mundialis](https://www.mundialis.de/).
 
+The library usage needs to be in a GRASS GIS session, so that the the module `grass` can be imported.
+
 ## Installation
 
 ```bash
