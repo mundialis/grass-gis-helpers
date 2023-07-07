@@ -1,0 +1,16 @@
+# Package files
+*.egg
+*.eggs/
+.installed.cfg
+*.egg-info
+
+# Build and docs folder/files
+build/*
+dist/*
+sdist/*
+docs/api/*
+docs/site/*
+cover/*
+MANIFEST
+
+*__pycache__*
