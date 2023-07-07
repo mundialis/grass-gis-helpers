@@ -1,7 +1,6 @@
 # mundialis GRASS GIS helper library
 
-This library includes functions which [mundialis](https://www.mundialis.de/)
-uses in different GRASS GIS addons.
+This library provides functions which can be used for developing GRASS GIS addons and which are used by [mundialis](https://www.mundialis.de/).
 
 ## Installation
 

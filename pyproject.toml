@@ -9,7 +9,7 @@ authors = [
   { name="Anika Weinmann", email="weinmann@mundialis.de" },
 ]
 maintainers = [{name="mundialis GmbH & Co. KG", email="info@mundialis.de"}]
-description = "This library includes functions which mundialisuses in different GRASS GIS addons."
+description = "This library provides functions which can be used for developing GRASS GIS addons."
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
