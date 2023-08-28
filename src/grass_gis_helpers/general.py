@@ -17,6 +17,8 @@
 #############################################################################
 
 import multiprocessing as mp
+import psutil
+import subprocess
 
 import grass.script as grass
 
@@ -35,3 +37,25 @@ def set_nprocs(nprocs):
                 f"{nprocs_real} CPUs available."
             )
         return nprocs
+
+
+def log_memory(grassenv=None):
+    """Log memory usage"""
+    if not grassenv:
+        grassenv = grass.gisenv()
+    cmd = grass.Popen(
+        f"df -h {grassenv['GISDBASE']}", shell=True, stdout=subprocess.PIPE
+    )
+    grass.message(
+        _(
+            f"\nDisk usage of GRASS GIS database:\n {cmd.communicate()[0].decode('utf-8').rstrip()}\n"
+        )
+    )
+
+    grass.message(_(f"\nmemory: \n{str(psutil.virtual_memory())}"))
+    grass.message(_(f"\nswap memory: \n{str(psutil.swap_memory())}"))
+    # ulimit -a
+    cmd = grass.Popen("ulimit -a", shell=True, stdout=subprocess.PIPE)
+    grass.message(
+        _(f"\nulimit -a: \n{cmd.communicate()[0].decode('utf-8').rstrip()}")
+    )
