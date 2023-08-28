@@ -49,7 +49,7 @@ def log_memory(grassenv=None):
     grass.message(
         _(
             "\nDisk usage of GRASS GIS database:\n",
-            f"{cmd.communicate()[0].decode('utf-8').rstrip()}\n"
+            f"{cmd.communicate()[0].decode('utf-8').rstrip()}\n",
         )
     )
 
