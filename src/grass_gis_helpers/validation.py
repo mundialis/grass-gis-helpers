@@ -22,7 +22,7 @@ import grass.script as grass
 
 
 def check_valid_rasterdata(input):
-    # check if input is not broken
+    """Check if input is not broken"""
     gdalinfo_cmd = ["gdalinfo", "-mm", input]
     p_gdalinfo = subprocess.Popen(
         gdalinfo_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE

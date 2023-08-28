@@ -9,6 +9,8 @@ exclude = .git
 max-line-length = 80
 
 per-file-ignores =
+    ./src/grass_gis_helpers/general.py: F821
     ./src/grass_gis_helpers/mapset.py: F821
     ./src/grass_gis_helpers/parallel.py: F821
     ./src/grass_gis_helpers/tiling.py: F821
+    ./src/grass_gis_helpers/validation.py: F821

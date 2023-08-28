@@ -17,8 +17,8 @@
 #############################################################################
 
 import multiprocessing as mp
-import psutil
 import subprocess
+import psutil
 
 import grass.script as grass
 
@@ -48,7 +48,8 @@ def log_memory(grassenv=None):
     )
     grass.message(
         _(
-            f"\nDisk usage of GRASS GIS database:\n {cmd.communicate()[0].decode('utf-8').rstrip()}\n"
+            "\nDisk usage of GRASS GIS database:\n",
+            f"{cmd.communicate()[0].decode('utf-8').rstrip()}\n"
         )
     )
 
