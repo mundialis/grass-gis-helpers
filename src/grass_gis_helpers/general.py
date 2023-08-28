@@ -39,6 +39,14 @@ def set_nprocs(nprocs):
         return nprocs
 
 
+def communicate_grass_command(*args, **kwargs):
+    """Return stdout and stderr from executed GRASS command"""
+    kwargs["stdout"] = grass.PIPE
+    kwargs["stderr"] = grass.PIPE
+    ps = grass.start_command(*args, **kwargs)
+    return ps.communicate()
+
+
 def log_memory(grassenv=None):
     """Log memory usage"""
     if not grassenv:
@@ -60,3 +68,33 @@ def log_memory(grassenv=None):
     grass.message(
         _(f"\nulimit -a: \n{cmd.communicate()[0].decode('utf-8').rstrip()}")
     )
+
+
+def freeRAM(unit, percent=100):
+    """The function gives the amount of the percentages of the available
+    RAM memory and free swap space.
+    Args:
+        unit(string): 'GB' or 'MB'
+        percent(int): number of percent which shoud be used of the available
+                      RAM memory and free swap space
+                      default 100%
+    Returns:
+        memory_MB_percent/memory_GB_percent(int): percent of the the available
+                                                  memory and free swap in MB or
+                                                  GB
+
+    """
+    # use psutil cause of alpine busybox free version for RAM/SWAP usage
+    mem_available = psutil.virtual_memory().available
+    swap_free = psutil.swap_memory().free
+    memory_GB = (mem_available + swap_free) / 1024.0**3
+    memory_MB = (mem_available + swap_free) / 1024.0**2
+
+    if unit == "MB":
+        memory_MB_percent = memory_MB * percent / 100.0
+        return int(round(memory_MB_percent))
+    elif unit == "GB":
+        memory_GB_percent = memory_GB * percent / 100.0
+        return int(round(memory_GB_percent))
+    else:
+        grass.fatal("Memory unit %s not supported" % unit)
