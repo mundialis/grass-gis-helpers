@@ -21,12 +21,24 @@ import subprocess
 import grass.script as grass
 
 
-def check_valid_rasterdata(input):
-    """Check if input is not broken"""
+def check_valid_rasterdata(input, strict=True):
+    """Check if input is broken and returns grass.fatal() in this case"""
     gdalinfo_cmd = ["gdalinfo", "-mm", input]
     p_gdalinfo = subprocess.Popen(
         gdalinfo_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     gdalinfo_err = p_gdalinfo.communicate()[1]
-    if gdalinfo_err.decode("utf-8") != "":
-        grass.fatal(_(f"<{input}> is a broken file"))
+    if strict:
+        # strict check: checks if gdalinfo contains any error
+        if gdalinfo_err.decode("utf-8") != "":
+            grass.fatal(
+                _(
+                    f"<{input}> contains erroneous data.\n",
+                    "NOTE: Might be harmless error messages. Data might be still readable.\n"
+                    "For a less strict check use: check_valid_rasterdata(<input>,strict=False).",
+                )
+            )
+    else:
+        # less strict check: fails only if bands can't be read
+        if gdalinfo_err.decode("utf-8") != 0:
+            grass.fatal(_(f"<{input}> is a broken file"))
