@@ -34,8 +34,10 @@ def check_valid_rasterdata(input, strict=True):
             grass.fatal(
                 _(
                     f"<{input}> contains erroneous data.\n",
-                    "NOTE: Might be harmless error messages. Data might be still readable.\n"
-                    "For a less strict check use: check_valid_rasterdata(<input>,strict=False).",
+                    "NOTE: Might be harmless error messages."
+                    "Data might be still readable.\n"
+                    "For a less strict check use:"
+                    "check_valid_rasterdata(<input>,strict=False).",
                 )
             )
     else:
