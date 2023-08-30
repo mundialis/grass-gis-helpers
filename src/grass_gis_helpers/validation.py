@@ -34,11 +34,11 @@ def check_valid_rasterdata(input, strict=True):
         if gdalinfo_err.decode("utf-8") != "":
             grass.fatal(
                 _(
-                    f"<{input}> contains erroneous data.\n",
-                    "NOTE: Might be harmless error messages."
-                    "Data might be still readable.\n"
-                    "For a less strict check use:"
-                    "check_valid_rasterdata(<input>,strict=False).",
+                    f"<{input}> contains erroneous data.\n"
+                    "NOTE: Might be harmless error messages. "
+                    "Data might be still readable. "
+                    "For a less strict check use: "
+                    "check_valid_rasterdata(<input>,strict=False)."
                 )
             )
     else:
