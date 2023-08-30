@@ -28,6 +28,7 @@ def check_valid_rasterdata(input, strict=True):
         gdalinfo_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     gdalinfo_err = p_gdalinfo.communicate()[1]
+    gdalinfo_returncode = p_gdalinfo.returncode
     if strict:
         # strict check: checks if gdalinfo contains any error
         if gdalinfo_err.decode("utf-8") != "":
@@ -42,5 +43,5 @@ def check_valid_rasterdata(input, strict=True):
             )
     else:
         # less strict check: fails only if bands can't be read
-        if gdalinfo_err.decode("utf-8") != 0:
+        if gdalinfo_returncode != 0:
             grass.fatal(_(f"<{input}> is a broken file"))
