@@ -11,7 +11,9 @@ pip install grass-gis-helpers
 ```
 
 ## Small example
+
 Small example how the library can be used inside a GRASS GIS session:
+
 ```python3
 from grass_gis_helpers import general
 general.set_nprocs(2)
