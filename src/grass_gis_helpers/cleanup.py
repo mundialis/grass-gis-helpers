@@ -20,9 +20,8 @@ import os
 import shutil
 import gc
 
-from .location import get_location_size
-
 import grass.script as grass
+from .location import get_location_size
 
 
 def general_cleanup(
