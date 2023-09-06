@@ -20,7 +20,7 @@ import os
 import shutil
 import gc
 
-from location import get_location_size
+from .location import get_location_size
 
 import grass.script as grass
 
