@@ -29,7 +29,9 @@ def get_location_size():
     )
     grass.message(
         _(
-            ("\nDisk usage of GRASS GIS database:\n",
-             f"{cmd.communicate()[0].decode('utf-8').rstrip()}\n"),
+            (
+                "\nDisk usage of GRASS GIS database:\n",
+                f"{cmd.communicate()[0].decode('utf-8').rstrip()}\n",
+            ),
         )
     )
