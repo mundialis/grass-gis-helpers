@@ -34,6 +34,7 @@ def general_cleanup(
     rm_regions=[],
     rm_strds=[],
     orig_region=None,
+    rm_mask=False,
 ):
     """General cleanup function"""
 
@@ -83,6 +84,9 @@ def general_cleanup(
                 quiet=True,
                 stderr=nulldev,
             )
+    if rm_mask:
+        if grass.find_file(name="MASK", element="raster")["file"]:
+            grass.run_command("r.mask", flags="r")
 
     # get location size
     get_location_size()
