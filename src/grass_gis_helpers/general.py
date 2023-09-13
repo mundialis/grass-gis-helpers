@@ -47,6 +47,17 @@ def communicate_grass_command(*args, **kwargs):
     return grass_ps.communicate()
 
 
+def check_grass_version(comp_version=(8, 0, 0)):
+    """Returns boolean, if current GRASS version is >= some compare version"""
+    cur_version = tuple(
+        [
+            int(x.replace("dev", "")) if x != "dev" else 0
+            for x in grass.version()["version"].split(".")
+        ]
+    )
+    return cur_version >= comp_version
+
+
 def log_memory(grassenv=None):
     """Log memory usage"""
     if not grassenv:
