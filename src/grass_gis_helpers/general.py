@@ -55,10 +55,7 @@ def check_grass_version(comp_version=(8, 0, 0)):
             for x in grass.version()["version"].split(".")
         ]
     )
-    if cur_version >= comp_version:
-        return True
-    else:
-        return False
+    return cur_version >= comp_version
 
 
 def log_memory(grassenv=None):
