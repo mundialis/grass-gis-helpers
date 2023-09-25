@@ -70,7 +70,8 @@ def run_module_parallel(
         msg = proc.outputs["stderr"].value.strip()
         grass.message(_(f"\nLog of {proc.get_bash()}:"))
         for msg_part in msg.split("\n"):
-            grass.message(_(msg_part))
+            if len(msg_part) > 0:
+                grass.message(msg_part)
 
     # verify that switching the mapset worked
     location_path = verify_mapsets(start_cur_mapset)
