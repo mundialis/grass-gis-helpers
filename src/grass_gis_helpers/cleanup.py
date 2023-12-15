@@ -21,7 +21,7 @@ import shutil
 import gc
 
 import grass.script as grass
-from .location import get_location_size
+from .location import get_location_size, switch_back_original_location
 
 
 def general_cleanup(
@@ -118,3 +118,22 @@ def reset_region(region):
         if grass.find_file(name=region, element="windows")["file"]:
             grass.run_command("g.region", region=region)
             grass.run_command("g.remove", type="region", name=region, **kwargs)
+
+
+def cleaning_tmp_location(original_gisrc, tmp_loc, gisdbase, tmp_gisrc):
+    """Cleaning up things from temporary location
+
+    Args:
+        original_gisrc (str): The path to the original GISRC file
+        tmp_loc (str): The name of the temporary location
+        gisdbase (str): The GISDBASE info
+        tmp_gisrc (str): The path to the temporary GISRC file
+    """
+    # switch back to original gisrc
+    if original_gisrc:
+        switch_back_original_location(original_gisrc)
+    # remove temporary location
+    if tmp_loc:
+        grass.try_rmdir(os.path.join(gisdbase, tmp_loc))
+    if tmp_gisrc:
+        grass.try_remove(tmp_gisrc)
