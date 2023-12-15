@@ -51,20 +51,20 @@ def create_tmp_location(epsg=4326):
     current_gisdbase = grass.gisenv()["GISDBASE"]
     srcgisrc = grass.tempfile()
     tmp_loc = f"temp_epsg{epsg}_location_{os.getpid()}"
-    f = open(srcgisrc, "w")
-    f.write("MAPSET: PERMANENT\n")
-    f.write("GISDBASE: %s\n" % current_gisdbase)
-    f.write("LOCATION_NAME: %s\n" % tmp_loc)
-    f.write("GUI: text\n")
-    f.close()
+    gisrc_file = open(srcgisrc, "w")
+    gisrc_file.write("MAPSET: PERMANENT\n")
+    gisrc_file.write(f"GISDBASE: {current_gisdbase}\n")
+    gisrc_file.write(f"LOCATION_NAME: {tmp_loc}\n")
+    gisrc_file.write("GUI: text\n")
+    gisrc_file.close()
 
     proj_test = grass.parse_command("g.proj", flags="g")
     if "epsg" in proj_test:
         epsg_arg = {"epsg": epsg}
     else:
-        epsg_arg = {"srid": "EPSG:{}".format(epsg)}
+        epsg_arg = {"srid": f"EPSG:{epsg}"}
     # create temp location from input without import
-    grass.verbose(_("Creating temporary location with EPSG:%d...") % epsg)
+    grass.verbose(_(f"Creating temporary location with EPSG:{epsg}..."))
     grass.run_command(
         "g.proj", flags="c", location=tmp_loc, quiet=True, **epsg_arg
     )
