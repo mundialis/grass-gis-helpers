@@ -1,8 +1,17 @@
 [flake8]
 
+# Quick reference for some of the most common errors
+# E203 whitespace before ':' (Black)
 # E402 module level import not at top of file
 # E501 line too long (83 > 79 characters)
 # F821 undefined name '_'
+# W503 line break before binary operator (Black)
+
+ignore =
+    # whitespace before ':' (Black)
+    E203,
+    # line break before binary operator (Black)
+    W503,
 
 exclude = .git
 
