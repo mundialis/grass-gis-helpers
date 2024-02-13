@@ -36,21 +36,19 @@ def import_local_raster_data(
     aoi,
     basename,
     local_data_dir,
-    fs,
     native_res_flag,
     all_raster,
     rm_rasters,
     band_dict=None,
 ):
     """Import local raster data. Where a VRT or TIFs are given in the directory
-    of "local_data_dir/fs".
+    of "local_data_dir".
 
     Args:
         aoi (str): Vector map with area of interest
         basename (str): Basename for imported rasters
-        local_data_dir (str): Path to local data directory with federal state
-                              subfolders
-        fs (str): the abbrivation of the federal state
+        local_data_dir (str): Path to local data directory with VRT or TIF
+                              files inside
         native_res_flag (bool): True if native data resolution should be used
         all_raster (list/dict): Empty list/dictonary where the imported rasters
                                 will be appended
@@ -70,12 +68,12 @@ def import_local_raster_data(
         band_dict = {"": ""}
     # get files (VRT if available otherwise TIF)
     raster_files = glob.glob(
-        os.path.join(local_data_dir, fs, "**", "*.vrt"),
+        os.path.join(local_data_dir, "**", "*.vrt"),
         recursive=True,
     )
     if not raster_files:
         raster_files = glob.glob(
-            os.path.join(local_data_dir, fs, "**", "*.tif"),
+            os.path.join(local_data_dir, "**", "*.tif"),
             recursive=True,
         )
 
@@ -265,20 +263,15 @@ def import_local_xyz_files(
     aoi,
     basename,
     local_data_dir,
-    fs,
-    native_res_flag,
     all_raster,
 ):
     """Import local XYZ raster data. Where the XYZ files which are inside the
-    directory of "local_data_dir/fs", will be imported for the AOI.
+    directory of "local_data_dir", will be imported for the AOI.
 
     Args:
         aoi (str): Vector map with area of interest
         basename (str): Basename for imported rasters
-        local_data_dir (str): Path to local data directory with federal state
-                              subfolders
-        fs (str): the abbrivation of the federal state
-        native_res_flag (bool): True if native data resolution should be used
+        local_data_dir (str): Path to local data directory with XYZ files
         all_raster (list/dict): empty list/dictonary where the imported rasters
                                 will be appended
     Returns:
@@ -289,7 +282,7 @@ def import_local_xyz_files(
 
     # get XYZ files
     xyz_files = glob.glob(
-        os.path.join(local_data_dir, fs, "**", "*.xyz"),
+        os.path.join(local_data_dir, "**", "*.xyz"),
         recursive=True,
     )
 
