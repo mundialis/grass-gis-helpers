@@ -2,10 +2,10 @@
 #
 ############################################################################
 #
-# MODULE:      general.py
-# AUTHOR(S):   Anika Weinmann
+# MODULE:      raster.py
+# AUTHOR(S):   Anika Weinmann, Julia Haas
 #
-# PURPOSE:     open-geodata-germany: general functions
+# PURPOSE:     functions for general raster processing
 # COPYRIGHT:   (C) 2024 by mundialis GmbH & Co. KG and the GRASS
 #              Development Team
 #
@@ -21,8 +21,42 @@
 #
 ############################################################################
 
-import os
+
 import grass.script as grass
+
+
+def adjust_raster_resolution(raster_name, output, res):
+    """Resample or inpolate raster to given resolution. It is important that
+    the region already has the right resolution
+
+    Args:
+        raster_name (str): The name of the raster map which should be
+                           resampled/interpolated
+        output (str): The name for the resampled/interpolated raster map
+        res (float): The resolution to which the raster should be resampled.
+    """
+    res_rast = float(
+        grass.parse_command("r.info", map=raster_name, flags="g")["nsres"]
+    )
+    if res_rast > res:
+        grass.run_command(
+            "r.resamp.interp",
+            input=raster_name,
+            output=output,
+            overwrite=True,
+            quiet=True,
+        )
+    elif res_rast < res:
+        grass.run_command(
+            "r.resamp.stats",
+            input=raster_name,
+            output=output,
+            method="median",
+            quiet=True,
+            overwrite=True,
+        )
+    else:
+        rename_raster(raster_name, output)
 
 
 def create_vrt(input_raster_list, output):
@@ -54,3 +88,18 @@ def create_vrt(input_raster_list, output):
         grass.run_command(
             "g.rename", raster=f"{input_raster_list[0]},{output}", quiet=True, overwrite=True
         )
+
+
+def rename_raster(band_name_old, band_name_new):
+    """Rename raster map
+
+    Args:
+        band_name_old (str): Raster map name to rename
+        band_name_new (str): The new name for the raster map
+    """
+    grass.run_command(
+        "g.rename",
+        raster=f"{band_name_old},{band_name_new}",
+        quiet=True,
+        overwrite=True,
+    )
