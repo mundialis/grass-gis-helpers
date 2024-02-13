@@ -41,7 +41,8 @@ def check_download_dir(download_dir):
             grass.message(
                 _(
                     f"Download folder {download_dir} does not exist and will "
-                    "be created.")
+                    "be created."
+                )
             )
             os.makedirs(download_dir)
     grass.message(f"Download directory: {download_dir}")

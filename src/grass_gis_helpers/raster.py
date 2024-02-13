@@ -82,11 +82,18 @@ def create_vrt(input_raster_list, output):
     if len(input_raster_list) > 1:
         grass.run_command("g.region", raster=input_raster_list)
         grass.run_command(
-            "r.buildvrt", input=input_raster_list, output=output, quiet=True, overwrite=True
+            "r.buildvrt",
+            input=input_raster_list,
+            output=output,
+            quiet=True,
+            overwrite=True,
         )
     else:
         grass.run_command(
-            "g.rename", raster=f"{input_raster_list[0]},{output}", quiet=True, overwrite=True
+            "g.rename",
+            raster=f"{input_raster_list[0]},{output}",
+            quiet=True,
+            overwrite=True,
         )
 
 

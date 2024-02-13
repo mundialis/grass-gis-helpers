@@ -10,9 +10,12 @@ max-line-length = 80
 
 per-file-ignores =
     ./src/grass_gis_helpers/cleanup.py: F821
+    ./src/grass_gis_helpers/data_import.py: F821
     ./src/grass_gis_helpers/general.py: F821
     ./src/grass_gis_helpers/location.py: F821
     ./src/grass_gis_helpers/mapset.py: F821
+    ./src/grass_gis_helpers/open_geodata_germany/download_data.py: F821
+    ./src/grass_gis_helpers/open_geodata_germany/federal_state.py: F821
     ./src/grass_gis_helpers/parallel.py: F821
     ./src/grass_gis_helpers/tiling.py: F821
     ./src/grass_gis_helpers/validation.py: F821

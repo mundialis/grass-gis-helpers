@@ -75,8 +75,8 @@ def get_federal_states(federal_state, federal_state_file):
         if not os.path.isfile(federal_state_file):
             grass.fatal(
                 _(
-                    f"Federal state file is given, but file "
-                    "<{federal_state_file}> does not exists."
+                    "Federal state file is given, but file "
+                    f"<{federal_state_file}> does not exists."
                 )
             )
         with open(federal_state_file) as fs_file:

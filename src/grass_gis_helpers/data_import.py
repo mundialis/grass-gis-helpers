@@ -33,15 +33,15 @@ from .raster import adjust_raster_resolution, rename_raster
 
 
 def import_local_raster_data(
-        aoi,
-        basename,
-        local_data_dir,
-        fs,
-        native_res_flag,
-        all_raster,
-        rm_rasters,
-        band_dict=None,  # e.g. band_dict = {1: "red", 2: "green", 3: "blue", 4: "nir"}
-    ):
+    aoi,
+    basename,
+    local_data_dir,
+    fs,
+    native_res_flag,
+    all_raster,
+    rm_rasters,
+    band_dict=None,
+):
     """Import local raster data. Where a VRT or TIFs are given in the directory
     of "local_data_dir/fs".
 
@@ -57,7 +57,9 @@ def import_local_raster_data(
         rm_rasters (list): List with rasters which should be removed
         band_dict (dict): Dictionary with band number and names, if none only
                           one band should be in the files which should be
-                          imported
+                          imported; e.g. for DOP import band_dict = {
+                              1: "red", 2: "green", 3: "blue", 4: "nir"
+                          }
     Returns:
         imported_local_data (bool): True if local data imported, otherwise
                                     False
@@ -125,9 +127,7 @@ def import_local_raster_data(
             rm_rasters.append(band_name_old)
             # check resolution and resample if needed
             if not native_res_flag:
-                adjust_raster_resolution(
-                    band_name_old, band_name_new, ns_res
-                )
+                adjust_raster_resolution(band_name_old, band_name_new, ns_res)
             else:
                 rename_raster(band_name_old, band_name_new)
             if isinstance(all_raster, dict):
@@ -178,12 +178,12 @@ def get_xyz_file_infos(xyz_file):
     # The shift is only needed if the bbox does not contain the pixel centers
     # (in the bbox the half of the resolution could be seen)
     shift_needed = True
-    half_res = res / 2.
+    half_res = res / 2.0
     if (
-        bbox_w % res == half_res and
-        bbox_e % res == half_res and
-        bbox_s % res == half_res and
-        bbox_n % res == half_res
+        bbox_w % res == half_res
+        and bbox_e % res == half_res
+        and bbox_s % res == half_res
+        and bbox_n % res == half_res
     ):
         shift_needed = False
     # get region to xyz file
@@ -223,10 +223,10 @@ def import_single_local_xyz_file(xyz_file, output, use_cur_reg=False):
     if use_cur_reg:
         cur_reg = grass.region()
         if (
-            cur_reg["e"] < xyz_reg["w"] or
-            xyz_reg["e"] < cur_reg["w"] or
-            cur_reg["n"] < xyz_reg["s"] or
-            xyz_reg["n"] < cur_reg["s"]
+            cur_reg["e"] < xyz_reg["w"]
+            or xyz_reg["e"] < cur_reg["w"]
+            or cur_reg["n"] < xyz_reg["s"]
+            or xyz_reg["n"] < cur_reg["s"]
         ):
             return None
     # import data
@@ -262,13 +262,13 @@ def import_single_local_xyz_file(xyz_file, output, use_cur_reg=False):
 
 
 def import_local_xyz_files(
-        aoi,
-        basename,
-        local_data_dir,
-        fs,
-        native_res_flag,
-        all_raster,
-    ):
+    aoi,
+    basename,
+    local_data_dir,
+    fs,
+    native_res_flag,
+    all_raster,
+):
     """Import local XYZ raster data. Where the XYZ files which are inside the
     directory of "local_data_dir/fs", will be imported for the AOI.
 
