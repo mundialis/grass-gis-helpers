@@ -22,14 +22,52 @@
 ############################################################################
 
 import glob
+import gzip
 import os
+import shutil
 from subprocess import PIPE
+import wget
 
 import grass.script as grass
 
 from grass_gis_helpers.general import communicate_grass_command
 
 from .raster import adjust_raster_resolution, rename_raster
+
+
+def downloaad_and_import_tindex(tindex_url, output, download_dir):
+    """Download and import tile index from url
+
+    Args:
+        tindex_url (str): URL of tile index
+        output (str): The output name for the tile index
+        download_dir (str): The directory where the data should be downloaded
+    """
+    cur_dir = os.getcwd()
+    zip_name = os.path.basename(tindex_url)
+    tindex_gpkg = zip_name.replace(".gz", "")
+    try:
+        os.chdir(download_dir)
+        # download data
+        wget.download(tindex_url, zip_name, bar=None)
+
+        # unzip tindex
+        os.system(f"gunzip {zip_name}")
+
+        # import data
+        grass.run_command(
+            "v.import",
+            input=tindex_gpkg,
+            output=output,
+            extent="region",
+            overwrite=True,
+            quiet=True,
+        )
+    finally:
+        for rm_file in [zip_name, tindex_gpkg]:
+            if os.path.isfile(rm_file):
+                os.remove(rm_file)
+        os.chdir(cur_dir)
 
 
 def import_local_raster_data(
