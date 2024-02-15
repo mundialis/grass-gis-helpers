@@ -30,8 +30,8 @@ import wget
 
 import grass.script as grass
 
-from grass_gis_helpers.general import communicate_grass_command
-
+from .cleanup import rm_vects
+from .general import communicate_grass_command
 from .raster import adjust_raster_resolution, rename_raster
 
 
@@ -68,6 +68,41 @@ def downloaad_and_import_tindex(tindex_url, output, download_dir):
             if os.path.isfile(rm_file):
                 os.remove(rm_file)
         os.chdir(cur_dir)
+
+
+def get_list_of_tindex_locations(tindex, aoi=None):
+    """Select the locations of the tindex which overlap with the AOI or the
+    current region
+
+    Args:
+        tindex (str): Name of the tindex vector map
+        aoi (str): Name of the AOI vector map
+    Returns:
+        (list): List with locations which overlap with the AOI or the current
+                region
+    """
+    tindex_clipped = f"clipped_tindex_vect_{grass.tempname(8)}"
+    try:
+        v_clip_kwargs = {
+            "input": tindex,
+            "output": tindex_clipped,
+            "flags": "d",
+            "quiet": True,
+        }
+        if aoi:
+            v_clip_kwargs["clip"] = aoi
+        else:
+            v_clip_kwargs["flags"] += "r"
+        grass.run_command("v.clip", **v_clip_kwargs)
+        # grass.vector_db_select(tindex_clipped, columns="location")
+        tiles = [
+            val[0] for val in grass.vector_db_select(
+                tindex_clipped, columns="location"
+            )["values"].values()
+        ]
+    finally:
+        rm_vects([tindex_clipped])
+    return tiles
 
 
 def import_local_raster_data(
@@ -198,16 +233,16 @@ def get_xyz_file_infos(xyz_file):
     # z.B.: Pixel Size = (1.000000000000000,1.000000000000000)
     res = float(stdout.split("Pixel Size = (")[1].split(",")[0])
     # get bbox
-    bbox_w = float(
+    bbox_x1 = float(
         stdout.split("Upper Left")[1].replace("(", "").split(",")[0].strip()
     )
-    bbox_e = float(
+    bbox_x2 = float(
         stdout.split("Upper Right")[1].replace("(", "").split(",")[0].strip()
     )
-    bbox_s = float(
+    bbox_y1 = float(
         stdout.split("Upper Left")[1].split(",")[1].split(")")[0].strip()
     )
-    bbox_n = float(
+    bbox_y2 = float(
         stdout.split("Lower Left")[1].split(",")[1].split(")")[0].strip()
     )
     # check if shift is needed
@@ -216,10 +251,10 @@ def get_xyz_file_infos(xyz_file):
     shift_needed = True
     half_res = res / 2.0
     if (
-        bbox_w % res == half_res
-        and bbox_e % res == half_res
-        and bbox_s % res == half_res
-        and bbox_n % res == half_res
+        bbox_x1 % res != half_res
+        and bbox_x2 % res != half_res
+        and bbox_y1 % res != half_res
+        and bbox_y2 % res != half_res
     ):
         shift_needed = False
     # get region to xyz file
