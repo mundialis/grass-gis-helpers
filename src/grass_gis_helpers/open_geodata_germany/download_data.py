@@ -21,6 +21,7 @@
 #
 ############################################################################
 
+import fileinput
 from multiprocessing.pool import ThreadPool
 import os
 import requests
@@ -93,14 +94,42 @@ def download_data_using_threadpool(urls, download_dir, nprocs):
 
 def extract_compressed_files(file_names, download_dir):
     """Extract compressed files to download directory.
+
     Args:
         file_names (list): List with compressed e.g. zip file names which
                            are stored in the download_dir
         download_dir (str): Path to directory where the data should be
                             downloaded
+    Returns:
+        extracted_files (list): List with extracted files
     """
+    extracted_files = []
     for file_name in file_names:
         file = os.path.join(download_dir, file_name)
         with ZipFile(file, "r") as zipObj:
+            zip_content = zipObj.namelist()
             # Extract all the contents of zip file in current directory
             zipObj.extractall(download_dir)
+            extracted_files.extend(zip_content)
+    return extracted_files
+
+
+def fix_corrupted_data(file):
+    """Fix corrupted XYZ/TXT data file e.g. for Berlin DOMs
+    Args:
+        file (str): XYZ or TXT data file with corrupted data
+    """
+    # remove corrupted data from TXT DOM files
+    if not os.path.exists(f"{file}.bak"):
+        with fileinput.FileInput(
+            file, inplace=True, backup=".bak"
+        ) as file_object:
+            for line in file_object:
+                # two times replace of white spaces, since some lines contain
+                # 3 spaces
+                print(
+                    line.replace("  ", " ")
+                    .replace("  ", " ")
+                    .replace("\t", " "),
+                    end="",
+                )

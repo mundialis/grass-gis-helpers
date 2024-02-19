@@ -22,9 +22,7 @@
 ############################################################################
 
 import glob
-import gzip
 import os
-import shutil
 from subprocess import PIPE
 import wget
 
@@ -86,17 +84,19 @@ def get_list_of_tindex_locations(tindex, aoi=None):
         v_clip_kwargs = {
             "input": tindex,
             "output": tindex_clipped,
-            "flags": "d",
+            "flags": "",
             "quiet": True,
         }
         if aoi:
             v_clip_kwargs["clip"] = aoi
+            v_clip_kwargs["flags"] += "d"
         else:
             v_clip_kwargs["flags"] += "r"
         grass.run_command("v.clip", **v_clip_kwargs)
         # grass.vector_db_select(tindex_clipped, columns="location")
         tiles = [
-            val[0] for val in grass.vector_db_select(
+            val[0]
+            for val in grass.vector_db_select(
                 tindex_clipped, columns="location"
             )["values"].values()
         ]
@@ -269,11 +269,10 @@ def get_xyz_file_infos(xyz_file):
         item.split("=")[0]: float(item.split("=")[1])
         for item in xyz_reg_str.strip().split(" ")
     }
-    if shift_needed:
-        xyz_reg["n"] += half_res
-        xyz_reg["s"] -= half_res
-        xyz_reg["w"] -= half_res
-        xyz_reg["e"] += half_res
+    xyz_reg["n"] += half_res
+    xyz_reg["s"] -= half_res
+    xyz_reg["w"] -= half_res
+    xyz_reg["e"] += half_res
     return res, xyz_reg, shift_needed
 
 
