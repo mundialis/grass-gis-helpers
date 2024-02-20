@@ -31,6 +31,7 @@ import grass.script as grass
 from .cleanup import rm_vects
 from .general import communicate_grass_command
 from .raster import adjust_raster_resolution, rename_raster
+from .vector import patch_vector
 
 
 def download_and_import_tindex(tindex_url, output, download_dir):
@@ -389,3 +390,72 @@ def import_local_xyz_files(
     if len(all_raster) > 0:
         imported_local_data = True
     return imported_local_data
+
+
+def import_local_vector_data(aoi_map, local_data_dir, fs, rm_vectors, output):
+    """Import of vector data from local file path
+
+    Args:
+        aoi_map (str): name of vector map defining AOI
+        local_data_dir (str): path to local data
+        fs (str): federal state
+        rm_vectors (list): List with vectors which should be removed
+        output (str): output map
+
+    Returns:
+        imported_local_data (bool): True if local data imported, otherwise False
+    """
+    imported_local_data = False
+
+    # get files (GPKG or SHP)
+    files = glob.glob(
+        os.path.join(local_data_dir, fs, "*.gpkg"),
+        recursive=True,
+    )
+    shp_files = glob.glob(
+        os.path.join(local_data_dir, fs, "*.shp"), recursive=True
+    )
+    files.extend(shp_files)
+
+    # import data for AOI
+    imported_list = []
+    for i, file in enumerate(files):
+        if aoi_map:
+            grass.run_command(
+                "g.region",
+                vector=aoi_map,
+                quiet=True,
+            )
+        grass.run_command(
+            "v.import",
+            input=file,
+            output=f"{output}_{i}",
+            extent="region",
+            quiet=True,
+        )
+        imported_list.append(f"{output}_{i}")
+        rm_vectors.append(f"{output}_{i}")
+
+    # patch outputs
+    patch_vector(imported_list, output)
+
+    # check if result is not empty
+    map_info = grass.parse_command(
+        "v.info",
+        map=output,
+        flags="gt",
+    )
+    if int(map_info["centroids"]) == 0 and fs in ["BW"]:
+        grass.fatal(_("Local data does not overlap with AOI."))
+    elif int(map_info["centroids"]) == 0:
+        grass.message(
+            _(
+                "Local data does not overlap with AOI. Data will be downloaded"
+                " from Open Data portal."
+            )
+        )
+    else:
+        imported_local_data = True
+
+    return imported_local_data
+
