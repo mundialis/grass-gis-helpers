@@ -25,7 +25,13 @@ import grass.script as grass
 
 
 def patch_vector(vector_list, output):
-    # patch output from several federal states
+    """Patches vector data from a list
+
+    Args:
+        vector_list (list): list with vectors to patch
+        output (str): output map
+    """
+    # patch several vectors (e.g. from parallel imports)
     if len(vector_list) > 1:
         grass.run_command(
             "v.patch",

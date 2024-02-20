@@ -393,7 +393,7 @@ def import_local_xyz_files(
 
 
 def import_local_vector_data(aoi_map, local_data_dir, fs, rm_vectors, output):
-    """Import of vector data from local file path
+    """Imports vector data from local file path
 
     Args:
         aoi_map (str): name of vector map defining AOI
