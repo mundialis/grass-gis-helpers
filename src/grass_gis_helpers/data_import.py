@@ -392,13 +392,12 @@ def import_local_xyz_files(
     return imported_local_data
 
 
-def import_local_vector_data(aoi_map, local_data_dir, fs, rm_vectors, output):
+def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
     """Imports vector data from local file path
 
     Args:
         aoi_map (str): name of vector map defining AOI
         local_data_dir (str): path to local data
-        fs (str): federal state
         rm_vectors (list): List with vectors which should be removed
         output (str): output map
 
@@ -409,11 +408,11 @@ def import_local_vector_data(aoi_map, local_data_dir, fs, rm_vectors, output):
 
     # get files (GPKG or SHP)
     files = glob.glob(
-        os.path.join(local_data_dir, fs, "*.gpkg"),
+        os.path.join(local_data_dir, "**", "*.gpkg"),
         recursive=True,
     )
     shp_files = glob.glob(
-        os.path.join(local_data_dir, fs, "*.shp"), recursive=True
+        os.path.join(local_data_dir, "**", "*.shp"), recursive=True
     )
     files.extend(shp_files)
 
@@ -439,23 +438,13 @@ def import_local_vector_data(aoi_map, local_data_dir, fs, rm_vectors, output):
     # patch outputs
     patch_vector(imported_list, output)
 
-    # check if result is not empty
+    # check if result has at least one feature
     map_info = grass.parse_command(
         "v.info",
         map=output,
         flags="gt",
     )
-    if int(map_info["centroids"]) == 0 and fs in ["BW"]:
-        grass.fatal(_("Local data does not overlap with AOI."))
-    elif int(map_info["centroids"]) == 0:
-        grass.message(
-            _(
-                "Local data does not overlap with AOI. Data will be downloaded"
-                " from Open Data portal."
-            )
-        )
-    else:
+    if int(map_info["centroids"]) > 0:
         imported_local_data = True
 
     return imported_local_data
-
