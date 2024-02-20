@@ -283,8 +283,8 @@ def import_single_local_xyz_file(xyz_file, output, use_cur_reg=False):
         xyz_file (str): XYZ file path to import
         output (str): Output raster file name
         use_cur_reg (bool): If True the XYZ file will only be imported if it
-                            overlaps with the current region, otherwise the XYZ
-                            file will imported
+                            overlaps with the current region, otherwise it
+                            will not be imported
     Returns:
         output (str): If the output is imported, otherwise return None
     """
