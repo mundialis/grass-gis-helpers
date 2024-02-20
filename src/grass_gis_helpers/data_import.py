@@ -33,7 +33,7 @@ from .general import communicate_grass_command
 from .raster import adjust_raster_resolution, rename_raster
 
 
-def downloaad_and_import_tindex(tindex_url, output, download_dir):
+def download_and_import_tindex(tindex_url, output, download_dir):
     """Download and import tile index from url
 
     Args:
@@ -337,8 +337,8 @@ def import_local_xyz_files(
     local_data_dir,
     all_raster,
 ):
-    """Import local XYZ raster data. Where the XYZ files which are inside the
-    directory of "local_data_dir", will be imported for the AOI.
+    """Import local XYZ raster data.  XYZ files which are inside the
+    directory of "local_data_dir" will be imported for the AOI.
 
     Args:
         aoi (str): Vector map with area of interest
@@ -385,7 +385,7 @@ def import_local_xyz_files(
             grass.message(
                 _(f"XYZ file <{os.path.basename(xyz_file)}> imported.")
             )
-    # check if raster where imported
+    # check if raster were imported
     if len(all_raster) > 0:
         imported_local_data = True
     return imported_local_data

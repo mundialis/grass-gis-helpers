@@ -31,8 +31,8 @@ import grass.script as grass
 
 
 def check_download_dir(download_dir):
-    """Checks if download directory is set. If yes check if folder exists or
-    creating it. If not set a temporary directory
+    """Checks if download directory is set. If yes, checks if folder exists or
+    creates it. If not set, a temporary directory will be used.
 
     Args:
         download_dir (str): download directory module parameter
@@ -76,7 +76,7 @@ def download_data_using_threadpool(urls, download_dir, nprocs):
     Args:
         urls (list): List with data download urls
         download_dir (str): Path to directory where the data should be
-                            downloaded
+                            downloaded to
         nprocs (int): The number of worker threads to use; If processes is None
                       then the number returned by os.cpu_count() is used.
     """
