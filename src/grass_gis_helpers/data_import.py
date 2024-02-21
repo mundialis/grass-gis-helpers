@@ -31,6 +31,7 @@ import grass.script as grass
 from .cleanup import rm_vects
 from .general import communicate_grass_command
 from .raster import adjust_raster_resolution, rename_raster
+from .vector import patch_vectors
 
 
 def download_and_import_tindex(tindex_url, output, download_dir):
@@ -388,4 +389,61 @@ def import_local_xyz_files(
     # check if raster were imported
     if len(all_raster) > 0:
         imported_local_data = True
+    return imported_local_data
+
+
+def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
+    """Import vector data from local file path
+
+    Args:
+        aoi_map (str): Name of vector map defining AOI
+        local_data_dir (str): Path to local data
+        rm_vectors (list): List with vectors that should be removed
+        output (str): Output map
+
+    Returns:
+        imported_local_data (bool): True if local data imported, otherwise False
+    """
+    imported_local_data = False
+
+    # get files (GPKG or SHP)
+    files = glob.glob(
+        os.path.join(local_data_dir, "**", "*.gpkg"),
+        recursive=True,
+    )
+    shp_files = glob.glob(
+        os.path.join(local_data_dir, "**", "*.shp"), recursive=True
+    )
+    files.extend(shp_files)
+
+    # import data for AOI
+    imported_list = []
+    for i, file in enumerate(files):
+        if aoi_map:
+            grass.run_command(
+                "g.region",
+                vector=aoi_map,
+                quiet=True,
+            )
+        grass.run_command(
+            "v.import",
+            input=file,
+            output=f"{output}_{i}",
+            extent="region",
+            quiet=True,
+        )
+        imported_list.append(f"{output}_{i}")
+
+    # patch outputs
+    patch_vectors(imported_list, output, rm_vectors)
+
+    # check if result has at least one feature
+    map_info = grass.parse_command(
+        "v.info",
+        map=output,
+        flags="gt",
+    )
+    if int(map_info["centroids"]) > 0:
+        imported_local_data = True
+
     return imported_local_data
