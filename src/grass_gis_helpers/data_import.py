@@ -31,7 +31,7 @@ import grass.script as grass
 from .cleanup import rm_vects
 from .general import communicate_grass_command
 from .raster import adjust_raster_resolution, rename_raster
-from .vector import patch_vector
+from .vector import patch_vectors
 
 
 def download_and_import_tindex(tindex_url, output, download_dir):
@@ -435,7 +435,7 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
         imported_list.append(f"{output}_{i}")
 
     # patch outputs
-    patch_vector(imported_list, output, rm_vectors)
+    patch_vectors(imported_list, output, rm_vectors)
 
     # check if result has at least one feature
     map_info = grass.parse_command(

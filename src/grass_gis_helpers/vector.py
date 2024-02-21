@@ -24,7 +24,7 @@
 import grass.script as grass
 
 
-def patch_vector(vector_list, output, rm_vectors=None):
+def patch_vectors(vector_list, output, rm_vectors=None):
     """Patch vector data from a list
 
     Args:
