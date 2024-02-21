@@ -124,7 +124,7 @@ def import_local_raster_data(
         local_data_dir (str): Path to local data directory with VRT or TIF
                               files inside
         native_res_flag (bool): True if native data resolution should be used
-        all_raster (list/dict): Empty list/dictonary where the imported rasters
+        all_raster (list/dict): Empty list/dictionary where the imported rasters
                                 will be appended
         rm_rasters (list): List with rasters which should be removed
         band_dict (dict): Dictionary with band number and names, if none only
@@ -156,7 +156,7 @@ def import_local_raster_data(
     ns_res = cur_reg["nsres"]
     ew_res = cur_reg["ewres"]
     # import data for AOI
-    # TODO parallize local data import for multi TIFs/VRTs
+    # TODO parallelize local data import for multi TIFs/VRTs
     for i, raster_file in enumerate(raster_files):
         # set aoi if it is given with current resolution
         if aoi and aoi != "":
@@ -345,7 +345,7 @@ def import_local_xyz_files(
         aoi (str): Vector map with area of interest
         basename (str): Basename for imported rasters
         local_data_dir (str): Path to local data directory with XYZ files
-        all_raster (list/dict): empty list/dictonary where the imported rasters
+        all_raster (list/dict): empty list/dictionary where the imported rasters
                                 will be appended
     Returns:
         imported_local_data (bool): True if local data imported, otherwise False
@@ -360,7 +360,7 @@ def import_local_xyz_files(
     )
 
     # import data for AOI
-    # TODO parallize local data import
+    # TODO parallelize local data import
     # get current region
     cur_reg = grass.region()
     ns_res = cur_reg["nsres"]

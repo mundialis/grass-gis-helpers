@@ -88,7 +88,7 @@ def free_ram(unit, percent=100):
     RAM memory and free swap space.
     Args:
         unit(string): 'GB' or 'MB'
-        percent(int): number of percent which shoud be used of the available
+        percent(int): number of percent which should be used of the available
                       RAM memory and free swap space
                       default 100%
     Returns:

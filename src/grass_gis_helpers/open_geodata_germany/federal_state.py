@@ -62,13 +62,13 @@ FS_ABBREVIATION = {
 
 def get_federal_states(federal_state, federal_state_file):
     """Get federal state and federal state file module parameters and return
-    list with federal state abbrevations
+    list with federal state abbreviations
 
     Args:
         federal_state (str): federal state module parameter
         federal_state_file (str): federal state file module parameter
     Returns:
-        (list): list with federale state abbrevations
+        (list): list with federale state abbreviations
 
     """
     if federal_state_file:
