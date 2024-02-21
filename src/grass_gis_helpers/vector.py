@@ -24,12 +24,13 @@
 import grass.script as grass
 
 
-def patch_vector(vector_list, output):
-    """Patches vector data from a list
+def patch_vector(vector_list, output, rm_vectors=None):
+    """Patch vector data from a list
 
     Args:
-        vector_list (list): list with vectors to patch
-        output (str): output map
+        vector_list (list): List with vectors to patch
+        output (str): Output map
+        rm_vectors (list): List with vectors that should be removed
     """
     # patch several vectors (e.g. from parallel imports)
     if len(vector_list) > 1:
@@ -40,6 +41,8 @@ def patch_vector(vector_list, output):
             flags="e",
             quiet=True,
         )
+        if rm_vectors is not None:
+            rm_vectors.extend(vector_list)
     else:
         grass.run_command(
             "g.rename",

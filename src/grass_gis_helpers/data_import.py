@@ -393,13 +393,13 @@ def import_local_xyz_files(
 
 
 def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
-    """Imports vector data from local file path
+    """Import vector data from local file path
 
     Args:
-        aoi_map (str): name of vector map defining AOI
-        local_data_dir (str): path to local data
-        rm_vectors (list): List with vectors which should be removed
-        output (str): output map
+        aoi_map (str): Name of vector map defining AOI
+        local_data_dir (str): Path to local data
+        rm_vectors (list): List with vectors that should be removed
+        output (str): Output map
 
     Returns:
         imported_local_data (bool): True if local data imported, otherwise False
@@ -433,10 +433,9 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
             quiet=True,
         )
         imported_list.append(f"{output}_{i}")
-        rm_vectors.append(f"{output}_{i}")
 
     # patch outputs
-    patch_vector(imported_list, output)
+    patch_vector(imported_list, output, rm_vectors)
 
     # check if result has at least one feature
     map_info = grass.parse_command(
