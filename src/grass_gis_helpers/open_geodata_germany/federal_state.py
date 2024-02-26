@@ -114,7 +114,6 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
             input=vsi_url,
             output=output,
             extent="region",
-            overwrite=True,
             quiet=True,
         )
     finally:
