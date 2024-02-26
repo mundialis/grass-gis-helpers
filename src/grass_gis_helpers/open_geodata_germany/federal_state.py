@@ -22,6 +22,7 @@
 ############################################################################
 
 import os
+import requests
 import grass.script as grass
 
 FS_ABBREVIATION = {
@@ -58,6 +59,67 @@ FS_ABBREVIATION = {
     "Thüringen": "TH",
     "TH": "TH",
 }
+
+
+def import_administrative_boundaries(output, aoi=None, level="KRS"):
+    """Import administrative boundaries for AOI/region
+
+    Args:
+        output (str): The name for the output vector map with the imported
+                      administrative boundaries
+        aoi (str): The name of the area of interest for which the
+                   administrative boundaries should be imported; if aoi is set
+                   to None the boundaries will be imported for the current
+                   region
+        level (str): The level of the administrative boundaries;
+                     STA - Staat
+                     LAN - Länder
+                     RBZ - Regierungsbezirke
+                     KRS - Kreise
+                     VWG - Verwaltungsgemeinschaften
+                     GEM - Gemeinden
+    """
+    # save current region and set region to AOI
+    if aoi:
+        reg = f"tmp_region_{grass.tempname(8)}"
+        grass.run_command("g.region", save=reg)
+        grass.run_command("g.region", vector=aoi, quiet=True)
+
+    # url of administrative boundaries
+    URL = (
+        "https://daten.gdz.bkg.bund.de/produkte/vg/vg5000_0101/"
+        "aktuell/vg5000_01-01.utm32s.shape.ebenen.zip"
+    )
+    # file of administrative boundaries in zip
+    filename = os.path.join(
+        "vg5000_01-01.utm32s.shape.ebenen",
+        "vg5000_ebenen_0101",
+        f"VG5000_{level}.shp",
+    )
+    try:
+        # check if URL is reachable
+        response = requests.get(URL)
+        if not response.status_code == 200:
+            grass.fatal(
+                (
+                    "The data import of the administrative boundaries are "
+                    "currently not available."
+                )
+            )
+
+        # download and import administrative boundaries
+        vsi_url = f"/vsizip/vsicurl/{URL}/{filename}"
+        grass.run_command(
+            "v.import",
+            input=vsi_url,
+            output=output,
+            extent="region",
+            overwrite=True,
+            quiet=True,
+        )
+    finally:
+        if aoi:
+            grass.run_command("g.region", region=reg)
 
 
 def get_federal_states(federal_state, federal_state_file):
