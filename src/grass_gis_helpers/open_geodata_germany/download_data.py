@@ -144,11 +144,15 @@ def fix_corrupted_data(file):
     """
     # remove corrupted data from TXT DOM files
     if not os.path.exists(f"{file}.bak"):
-        with fileinput.FileInput(file, inplace=True, backup=".bak") as file_object:
+        with fileinput.FileInput(
+            file, inplace=True, backup=".bak"
+        ) as file_object:
             for line in file_object:
                 # two times replace of white spaces, since some lines contain
                 # 3 spaces
                 print(
-                    line.replace("  ", " ").replace("  ", " ").replace("\t", " "),
+                    line.replace("  ", " ")
+                    .replace("  ", " ")
+                    .replace("\t", " "),
                     end="",
                 )
