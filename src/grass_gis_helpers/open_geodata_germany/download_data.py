@@ -58,7 +58,7 @@ def check_download_dir(download_dir):
 def url_response(url):
     """URL response function which is used by download_data_using_threadpool
 
-    Arsg:
+    Args:
         url (str): data download url
     Return:
         url (str): Return the url for printing
@@ -116,7 +116,8 @@ def extract_compressed_files(file_names, download_dir):
 
 
 def extract_compressed_files_deflate64(file_names, download_dir):
-    """Extract compressed files to download directory using the zipfile_deflate64 library.
+    """Extract compressed files to download directory using the
+    zipfile_deflate64 library.
 
     Args:
         file_names (list): List with compressed e.g. zip file names which
@@ -139,6 +140,7 @@ def extract_compressed_files_deflate64(file_names, download_dir):
 
 def fix_corrupted_data(file):
     """Fix corrupted XYZ/TXT data file e.g. for Berlin DOMs
+
     Args:
         file (str): XYZ or TXT data file with corrupted data
     """
