@@ -25,6 +25,7 @@ import fileinput
 from multiprocessing.pool import ThreadPool
 import os
 import requests
+import zipfile_deflate64
 from zipfile import ZipFile
 
 import grass.script as grass
@@ -57,7 +58,7 @@ def check_download_dir(download_dir):
 def url_response(url):
     """URL response function which is used by download_data_using_threadpool
 
-    Arsg:
+    Args:
         url (str): data download url
     Return:
         url (str): Return the url for printing
@@ -114,8 +115,32 @@ def extract_compressed_files(file_names, download_dir):
     return extracted_files
 
 
+def extract_compressed_files_deflate64(file_names, download_dir):
+    """Extract compressed files to download directory using the
+    zipfile_deflate64 library.
+
+    Args:
+        file_names (list): List with compressed e.g. zip file names which
+                           are stored in the download_dir
+        download_dir (str): Path to directory where the data should be
+                            downloaded
+    Returns:
+        extracted_files (list): List with extracted files
+    """
+    extracted_files = []
+    for file_name in file_names:
+        file = os.path.join(download_dir, file_name)
+        with zipfile_deflate64.ZipFile(file, "r") as zipObj:
+            zip_content = zipObj.namelist()
+            # Extract all the contents of zip file in current directory
+            zipObj.extractall(download_dir)
+            extracted_files.extend(zip_content)
+    return extracted_files
+
+
 def fix_corrupted_data(file):
     """Fix corrupted XYZ/TXT data file e.g. for Berlin DOMs
+
     Args:
         file (str): XYZ or TXT data file with corrupted data
     """
