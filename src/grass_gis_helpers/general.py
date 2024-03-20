@@ -113,7 +113,6 @@ def free_ram(unit, percent=100):
         grass.fatal(f"Memory unit {unit} not supported")
 
 
-
 def test_memory(memory_string):
     """Function returns available memory.
     Args:
@@ -124,9 +123,7 @@ def test_memory(memory_string):
     memory = int(memory_string)
     ram = free_ram("MB", 100)
     if ram < memory:
-        grass.warning(
-            _(f"Using {memory} MB but only {ram} MB RAM available.")
-        )
+        grass.warning(_(f"Using {memory} MB but only {ram} MB RAM available."))
         grass.warning(_(f"Set used memory to {ram} MB."))
         return ram
     else:
