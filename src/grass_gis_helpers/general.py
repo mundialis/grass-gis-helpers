@@ -83,7 +83,7 @@ def log_memory(grassenv=None):
     )
 
 
-def free_ram(unit, percent=100):
+def get_free_ram(unit, percent=100):
     """The function gives the amount of the percentages of the available
     RAM memory and free swap space.
     Args:
@@ -114,17 +114,19 @@ def free_ram(unit, percent=100):
 
 
 def test_memory(memory_string):
-    """Function returns available memory.
+    """Test if desired memory is available. In case RAM is smaller than desired memory, use free RAM instead of desired memory value.
     Args:
         memory_string(string): string from standard memory input option
     Returns:
-        memory(int): available memory to use"""
+        free_ram(int): free RAM to use
+        memory(int): available memory to use
+    """
     # check memory
     memory = int(memory_string)
-    ram = free_ram("MB", 100)
-    if ram < memory:
-        grass.warning(_(f"Using {memory} MB but only {ram} MB RAM available."))
-        grass.warning(_(f"Set used memory to {ram} MB."))
-        return ram
+    free_ram = get_free_ram("MB", 100)
+    if free_ram < memory:
+        grass.warning(_(f"Using {memory} MB but only {free_ram} MB RAM available."))
+        grass.warning(_(f"Set used memory to {free_ram} MB."))
+        return free_ram
     else:
         return memory
