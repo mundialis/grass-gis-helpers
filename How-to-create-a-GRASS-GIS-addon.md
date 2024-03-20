@@ -19,9 +19,10 @@ for most operating systems in the wiki:
 
 [Compile and install instructions](https://grasswiki.osgeo.org/wiki/Compile_and_Install)
 
-Running GRASS GIS is effectively not much more than setting some environmental variables
-that define where the GRASS GIS binaries and some auxiliary libraries are located and where to find the spatial data. Since GRASS GIS is a modular system, only the core libraries
-are needed as a minimum.
+Running GRASS GIS is effectively not much more than setting some environmental
+variables that define where the GRASS GIS binaries and some auxiliary libraries
+are located and where to find the spatial data. Since GRASS GIS is a modular
+system, only the core libraries are needed as a minimum.
 
 ## How to create a GRASS GIS addon
 
@@ -31,7 +32,7 @@ A GRASS python module consists of
 * either a python script (most easy with one script as whole addon)
 * or C code
 
-#### Reuse & Recycle:
+#### Reuse & Recycle... and refactor!:
 * it helps if GRASS GIS source code is there to look at
 * best to look at existing GRASS addons
   * [r.mapcalc.simple](https://github.com/OSGeo/grass/tree/master/scripts/r.mapcalc.simple)
@@ -40,10 +41,12 @@ A GRASS python module consists of
 * inside the GRASS GIS source code all python modules are in folder 'scripts'
 * or see https://grasswiki.osgeo.org/wiki/Category:Python, especially https://grasswiki.osgeo.org/wiki/GRASS_Python_Scripting_Library
 * use ```r.blend --script``` and it will generate how it would look like as addon (like a template, not a copy of source code!) (will always create generic long version)
-* use of predefinded functions ```import grass.script as gscript``` (e.g. gscript.run_command, gscript.message, gscript.fatal, gscript.warning, gscript.read_command)
+* use of predefinded functions ```import grass.script as grass``` (e.g. grass.run_command, grass.message, grass.fatal, grass.warning, grass.read_command)
+  * See [script documentation](https://grass.osgeo.org/grass83/manuals/libpython/script.html) for more usage examples
   * located in 'python/script', please read to avoid to reinvent the wheel
   * TODO add docs (but better to read source code because it might be more up-to-date)
 * use of [grass-gis-helpers](https://github.com/mundialis/grass-gis-helpers) library
+  * also beware of copying multiple code mutiple times, if there are only small changes. Consider adding methods to [grass-gis-helpers](https://github.com/mundialis/grass-gis-helpers) library instead and reuse.
 * use of [github-workflows](https://github.com/mundialis/github-workflows)
   * add linting workflow
   * add workflow to run tests
@@ -62,13 +65,16 @@ A GRASS python module consists of
     r.blend -c first=aspect second=elevation output=elev_shade_blend
     ```
     ###### ```# % module```
+    * including `keyword` to make it appear in keyword searches and lists
     ###### ```# % options```
     * (e.g. 'input', 'output', 'first'), some are predefined (predefined or custom, predefined is more convenient but also needs more knowledge to use)
     * key is key in command line (e.g. 'first')
     * answer is default values
     * access them in main function like ```options['first']```
-
+    * there are also [standard options]("https://grass.osgeo.org/grass84/manuals/parser_standard_options.html) which can be extended
     ###### ```# % flag```
+    ###### ```# % rules```
+    * define dependencies between options, required options and more. See official [docs](https://grass.osgeo.org/grass84/manuals/g.parser.html#conditional-parameters)
 
 4. ```def main():``` reads in all variables (```options['first']```)
     * a main function is required
@@ -77,13 +83,13 @@ A GRASS python module consists of
 
     ```
     if __name__ == "__main__":
-        options, flags = gscript.parser()
+        options, flags = grass.parser()
         main()
     ```
     or optionally clean temporary stuff in 'cleanup' function and call it on exit
     ```
     if __name__ == "__main__":
-        options, flags = gscript.parser()
+        options, flags = grass.parser()
         atexit.register(cleanup)
         main()
     ```
@@ -110,19 +116,22 @@ A GRASS python module consists of
 ```
 
 * for this to work use message standardisation (look at locale)
-* how to name it
-  * start with 'v.' if it is a vector module
-  * start with 'r.' if it is a raster module
-  * start with 'db.' if it is a database module
+#### how to name it
+Choose a name depending on the "family":
+  * start with `v.` if it is a vector module
+  * start with `r.` if it is a raster module
+  * start with `i.` if it is a imagery module
+  * start with `db.` if it is a database module
   * try to stick to existing convention but no strickt rules
   * do not name it too long
+  * existing families are d, db, g, i, m, ps, r, r3, t, test and v
 
 
 #### mundialis / actinia specific
 
 * How to handle dependencies (for installation within actinia)
   * use `requirements.txt` for python packages
-* How can I log to actinia output? (with `gscript.message`)
+* How can I log to actinia output? (with `grass.message`)
 * GRASS GIS addons need to be installed globally (see `$HOME`)
 * Which things are tricky
   * `db.login`, `db.connect -d`
