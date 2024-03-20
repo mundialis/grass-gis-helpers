@@ -114,7 +114,8 @@ def get_free_ram(unit, percent=100):
 
 
 def test_memory(memory_string):
-    """Test if desired memory is available. In case RAM is smaller than desired memory, use free RAM instead of desired memory value.
+    """Test if desired memory is available. In case RAM is smaller than
+    desired memory, use free RAM instead of desired memory value.
     Args:
         memory_string(string): string from standard memory input option
     Returns:
@@ -125,7 +126,9 @@ def test_memory(memory_string):
     memory = int(memory_string)
     free_ram = get_free_ram("MB", 100)
     if free_ram < memory:
-        grass.warning(_(f"Using {memory} MB but only {free_ram} MB RAM available."))
+        grass.warning(
+            _(f"Using {memory} MB but only {free_ram} MB RAM available.")
+        )
         grass.warning(_(f"Set used memory to {free_ram} MB."))
         return free_ram
     else:
