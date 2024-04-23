@@ -32,11 +32,11 @@ import grass.script as grass
 
 
 def check_download_dir(download_dir):
-    """Checks if download directory is set. If yes, checks if folder exists or
-    creates it. If not set, a temporary directory will be used.
+    """Check if download directory is set. If yes, check if folder exists or
+    create it. If not set, a temporary directory will be used.
 
     Args:
-        download_dir (str): download directory module parameter
+        download_dir (str): Download directory module parameter
     Returns:
         (str): Path to download directory
     """
@@ -51,6 +51,13 @@ def check_download_dir(download_dir):
                 )
             )
             os.makedirs(download_dir)
+        elif os.path.exists(download_dir) and os.listdir(download_dir):
+            grass.warning(
+                _(
+                    f"Download folder {download_dir} exists and is not empty. "
+                    "Folder will NOT be deleted."
+                )
+            )
     grass.message(f"Download directory: {download_dir}")
     return download_dir
 
@@ -59,7 +66,7 @@ def url_response(url):
     """URL response function which is used by download_data_using_threadpool
 
     Args:
-        url (str): data download url
+        url (str): Data download url
     Return:
         url (str): Return the url for printing
     """

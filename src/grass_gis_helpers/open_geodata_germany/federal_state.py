@@ -126,10 +126,10 @@ def get_federal_states(federal_state, federal_state_file):
     list with federal state abbreviations
 
     Args:
-        federal_state (str): federal state module parameter
-        federal_state_file (str): federal state file module parameter
+        federal_state (str): Federal state module parameter
+        federal_state_file (str): Federal state file module parameter
     Returns:
-        (list): list with federale state abbreviations
+        (list): List with federal state abbreviations
 
     """
     if federal_state_file:
@@ -137,11 +137,15 @@ def get_federal_states(federal_state, federal_state_file):
             grass.fatal(
                 _(
                     "Federal state file is given, but file "
-                    f"<{federal_state_file}> does not exists."
+                    f"<{federal_state_file}> does not exist."
                 )
             )
         with open(federal_state_file) as fs_file:
             fs_list_str = fs_file.read().strip()
+            if fs_list_str == "":
+                grass.fatal(
+                    _("Federal state in <federal_state_file> is empty string!")
+                )
     elif federal_state:
         fs_list_str = federal_state.strip()
     else:
