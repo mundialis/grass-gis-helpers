@@ -58,8 +58,10 @@ A GRASS python module consists of
 ### Structure (here `r.blend` as example)
 
 1. shebang (first line)
-2. header (author, purpose, license)
-3. `# % ` comments are important (ignored by python but important for parser)
+
+1. header (author, purpose, license)
+
+1. `# % ` comments are important (ignored by python but important for parser)
 
    - See https://grass.osgeo.org/grass-devel/manuals/g.parser.html
 
@@ -77,7 +79,7 @@ A GRASS python module consists of
    - key is key in command line (e.g. 'first')
    - answer is default values
    - access them in main function like `options['first']`
-   - there are also [standard options]("https://grass.osgeo.org/grass84/manuals/parser_standard_options.html) which can be extended
+   - there are also [standard options](%22https://grass.osgeo.org/grass84/manuals/parser_standard_options.html) which can be extended
 
    ###### `# % flag`
 
@@ -85,10 +87,13 @@ A GRASS python module consists of
 
    - define dependencies between options, required options and more. See official [docs](https://grass.osgeo.org/grass84/manuals/g.parser.html#conditional-parameters)
 
-4. `def main():` reads in all variables (`options['first']`)
+1. `def main():` reads in all variables (`options['first']`)
+
    - a main function is required
-5. indefinite additional functions are possible
-6. include parser at the end before calling main function:
+
+1. indefinite additional functions are possible
+
+1. include parser at the end before calling main function:
 
    ```python
    if __name__ == "__main__":
@@ -108,13 +113,19 @@ A GRASS python module consists of
 ## Best practises
 
 - python style guide
-  - [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/])
+
+  - [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/%5D)
   - https://trac.osgeo.org/grass/wiki/Submitting
   - https://trac.osgeo.org/grass/wiki/Submitting/Python
+
 - html documentation (no full html please, parts are auto-generated at compile time)
+
   - https://trac.osgeo.org/grass/wiki/Submitting/Docs
+
 - to support i18n, import following module and use macro '\_' before strings. The text after will be replaced with existing lookup tables for other languages
+
 - use existing functions: esp. from PyGRASS
+
   - API description: https://grass.osgeo.org/grass-devel/manuals/libpython/pygrass_index.html
   - PyGRASS paper: An Object Oriented Python Application Programming Interface (API) for GRASS: https://www.mdpi.com/2220-9964/2/1/201/htm
 
@@ -204,7 +215,9 @@ Choose a name depending on the "family":
   ```
 
 - Fix lint errors which black couldn't fix or add exception to `.flake8` file
+
 - Black does not fix GRASS GIS parameter `#%`. This can be batch changed with `sed -i 's|^#%|# %|g' foo.py`
+
 - There may not be any linting issues left as the pipeline would fail
 
 #### General steps Part 2
