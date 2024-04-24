@@ -4,4 +4,4 @@ on: [push]
 
 jobs:
   lint:
-    uses: mundialis/github-workflows/.github/workflows/linting.yml@main
+    uses: mundialis/github-workflows/.github/workflows/linting.yml@linting_workflow_fix
