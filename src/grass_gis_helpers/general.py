@@ -133,3 +133,17 @@ def test_memory(memory_string):
         return free_ram
     else:
         return memory
+
+
+def check_installed_addon(addon, url):
+    """Check if addon is already installed and raise error if not.
+    Args:
+        addon(string): Addon to check if it is installed
+        url(string): Path to addon
+    """
+    if not grass.find_program(addon, "--help"):
+        msg = (
+            f"The '{addon}' module was not found, install  it first:\n"
+            f"g.extension {addon} url={url}"
+        )
+        grass.fatal(_(msg))
