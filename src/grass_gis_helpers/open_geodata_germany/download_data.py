@@ -62,19 +62,38 @@ def check_download_dir(download_dir):
     return download_dir
 
 
-def url_response(url):
+def url_response(url, retries=1, sleeptime=10):
+    # TODO: how to give other value than default?
     """URL response function which is used by download_data_using_threadpool
 
     Args:
         url (str): Data download url
+        retries (int): Number of iterations to try download
+        sleeptime (int): Time for sleep before trying download again
     Return:
         url (str): Return the url for printing
     """
     filename = os.path.basename(url)
-    response = requests.get(url, stream=True)
-    with open(str(filename), "wb") as f:
-        for chunk in response:
-            f.write(chunk)
+    trydownload = True
+    count = 0
+    while trydownload:
+        try:
+            count += 1
+            # TODO: use timeout?
+            response = requests.get(url, stream=True)  # , timeout=800)
+            response.raise_for_status()
+            with open(str(filename), "wb") as f:
+                # TODO: use chunk size?
+                for chunk in response:  # .iter_content(chunk_size=8192):
+                    f.write(chunk)
+            trydownload = False
+        except Exception:
+            if count > retries:
+                trydownload = False
+                grass.fatal(f"Download of {url} currently not working.")
+            grass.message(_("Retry download..."))
+            sleep(sleeptime)
+
     return url
 
 
