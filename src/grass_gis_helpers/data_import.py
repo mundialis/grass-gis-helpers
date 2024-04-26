@@ -300,7 +300,7 @@ def import_single_local_xyz_file(xyz_file, output, use_cur_reg=False):
             or xyz_reg["n"] < cur_reg["s"]
         ):
             return None
-    # import data
+    # set region
     grass.run_command(
         "g.region",
         n=xyz_reg["n"],
@@ -309,6 +309,20 @@ def import_single_local_xyz_file(xyz_file, output, use_cur_reg=False):
         e=xyz_reg["e"],
         res=res,
     )
+    if use_cur_reg:
+        while (cur_reg["n"] + res) < xyz_reg["n"]:
+            grass.run_command("g.region", n=f"n-{res}")
+            xyz_reg["n"] -= res
+        while (cur_reg["s"] - res) > xyz_reg["s"]:
+            grass.run_command("g.region", s=f"s+{res}")
+            xyz_reg["s"] += res
+        while (cur_reg["e"] + res) < xyz_reg["e"]:
+            grass.run_command("g.region", e=f"e-{res}")
+            xyz_reg["e"] -= res
+        while (cur_reg["w"] - res) > xyz_reg["w"]:
+            grass.run_command("g.region", w=f"w+{res}")
+            xyz_reg["w"] += res
+    # import data
     grass.run_command(
         "r.in.xyz",
         input=xyz_file,
