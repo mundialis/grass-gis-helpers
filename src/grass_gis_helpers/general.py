@@ -135,7 +135,7 @@ def test_memory(memory_string):
         return memory
 
 
-def check_installed_addon(addon, url):
+def check_installed_addon(addon, url="..."):
     """Check if addon is already installed and raise error if not.
     Args:
         addon(string): Addon to check if it is installed
