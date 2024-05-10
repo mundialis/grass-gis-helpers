@@ -64,15 +64,15 @@ def general_cleanup(
         if os.path.isdir(rmdir):
             shutil.rmtree(rmdir)
     if orig_region is not None:
-        fing_reg = grass.find_file(name=orig_region, element="windows")
-        if "file" in fing_reg and fing_reg["file"]:
+        find_reg = grass.find_file(name=orig_region, element="windows")
+        if "file" in find_reg and find_reg["file"]:
             grass.run_command("g.region", region=orig_region)
             grass.run_command(
                 "g.remove", type="region", name=orig_region, **kwargs
             )
     for rmreg in rm_regions:
-        fing_reg = grass.find_file(name=rmreg, element="windows")
-        if "file" in fing_reg and fing_reg["file"]:
+        find_reg = grass.find_file(name=rmreg, element="windows")
+        if "file" in find_reg and find_reg["file"]:
             grass.run_command("g.remove", type="region", name=rmreg, **kwargs)
     strds = grass.parse_command("t.list", type="strds")
     mapset = grass.gisenv()["MAPSET"]
