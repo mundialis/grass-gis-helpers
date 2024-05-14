@@ -217,11 +217,12 @@ def import_local_raster_data(
     return imported_local_data
 
 
-def get_xyz_file_infos(xyz_file):
+def get_xyz_file_infos(xyz_file, separator="space"):
     """Get the infos of a XYZ file to resolution, bounding box and pixelcenter
 
     Args:
         xyz_file (str): XYZ file path to import
+        separator (str): Separator of XYZ file; default is "space"
     Returns:
         res (float): Resolution of the XYZ file
         xyz_reg (dict): Dictionary with region of the XYZ file
@@ -264,7 +265,7 @@ def get_xyz_file_infos(xyz_file):
         output="dummy",
         input=xyz_file,
         flags="sg",
-        separator="space",
+        separator=separator,
     )
     xyz_reg = {
         item.split("=")[0]: float(item.split("=")[1])
@@ -277,7 +278,9 @@ def get_xyz_file_infos(xyz_file):
     return res, xyz_reg, shift_needed
 
 
-def import_single_local_xyz_file(xyz_file, output, use_cur_reg=False):
+def import_single_local_xyz_file(
+    xyz_file, output, use_cur_reg=False, separator="space"
+):
     """Import single XYZ file
 
     Args:
@@ -286,10 +289,13 @@ def import_single_local_xyz_file(xyz_file, output, use_cur_reg=False):
         use_cur_reg (bool): If True the XYZ file will only be imported if it
                             overlaps with the current region, otherwise it
                             will not be imported
+        separator (str): Separator of XYZ file; default is "space"
     Returns:
         output (str): If the output is imported, otherwise return None
     """
-    res, xyz_reg, shift_needed = get_xyz_file_infos(xyz_file)
+    res, xyz_reg, shift_needed = get_xyz_file_infos(
+        xyz_file, separator=separator
+    )
     # check if aoi overlaps
     if use_cur_reg:
         cur_reg = grass.region()
@@ -328,7 +334,7 @@ def import_single_local_xyz_file(xyz_file, output, use_cur_reg=False):
         input=xyz_file,
         output=output,
         method="mean",
-        separator="space",
+        separator=separator,
         quiet=True,
         overwrite=True,
     )
