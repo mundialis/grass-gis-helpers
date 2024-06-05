@@ -43,8 +43,8 @@ def get_number_of_grass_elements():
 
 
 def check_number_of_grass_elements(
-        ref_num_rast, ref_num_vect, ref_num_gr, ref_num_reg, ref_num_mapsets
-    ):
+    ref_num_rast, ref_num_vect, ref_num_gr, ref_num_reg, ref_num_mapsets
+):
     """Check the number of grass elements
 
     Args:
@@ -63,4 +63,6 @@ def check_number_of_grass_elements(
         (n_reg, ref_num_reg, "regions"),
         (n_mapsets, ref_num_mapsets, "mapsets"),
     ]:
-        assert num == ref, f"The number of {data_type} is {num} but should be {ref}"
+        assert (
+            num == ref
+        ), f"The number of {data_type} is {num} but should be {ref}"
