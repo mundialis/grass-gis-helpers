@@ -30,9 +30,13 @@ def general_cleanup(
     rm_files=[],
     rm_dirs=[],
     rm_groups=[],
-    rm_groups_wo_rasters=[],
+    rm_groups_w_rasters=[],
+    rm_groups_wo_rasters=[], # kept for backwards compatibility
     rm_regions=[],
     rm_strds=[],
+    rm_strds_w_rasters=[],
+    rm_stvds=[],
+    rm_stvds_w_vectors=[],
     orig_region=None,
     rm_mask=False,
 ):
@@ -41,16 +45,17 @@ def general_cleanup(
     grass.message(_("Cleaning up..."))
     nulldev = open(os.devnull, "w")
     kwargs = {"flags": "f", "quiet": True, "stderr": nulldev}
+    rm_groups.extend(rm_groups_wo_rasters)
     for rmg in rm_groups:
         if grass.find_file(name=rmg, element="group")["file"]:
+            grass.run_command("g.remove", type="group", name=rmg, **kwargs)
+    for rmg_wr in rm_groups_w_rasters:
+        if grass.find_file(name=rmg_wr, element="group")["file"]:
             group_rasters = grass.parse_command(
-                "i.group", flags="lg", group=rmg
+                "i.group", flags="lg", group=rmg_wr
             )
             rm_rasters.extend(group_rasters)
             grass.run_command("g.remove", type="group", name=rmg, **kwargs)
-    for rmg_wor in rm_groups_wo_rasters:
-        if grass.find_file(name=rmg_wor, element="group")["file"]:
-            grass.run_command("g.remove", type="group", name=rmg_wor, **kwargs)
     for rmrast in rm_rasters:
         if grass.find_file(name=rmrast, element="raster")["file"]:
             grass.run_command("g.remove", type="raster", name=rmrast, **kwargs)
@@ -75,6 +80,7 @@ def general_cleanup(
         if "file" in find_reg and find_reg["file"]:
             grass.run_command("g.remove", type="region", name=rmreg, **kwargs)
     strds = grass.parse_command("t.list", type="strds")
+    stvds = grass.parse_command("t.list", type="stvds")
     mapset = grass.gisenv()["MAPSET"]
     for rm_s in rm_strds:
         if f"{rm_s}@{mapset}" in strds:
@@ -83,6 +89,36 @@ def general_cleanup(
                 flags="rf",
                 type="strds",
                 input=rm_s,
+                quiet=True,
+                stderr=nulldev,
+            )
+    for rm_s_wr in rm_strds_w_rasters:
+        if f"{rm_s_wr}@{mapset}" in strds:
+            grass.run_command(
+                "t.remove",
+                flags="fd",
+                type="strds",
+                input=rm_s_wr,
+                quiet=True,
+                stderr=nulldev,
+            )
+    for rm_v in rm_stvds:
+        if f"{rm_v}@{mapset}" in stvds:
+            grass.run_command(
+                "t.remove",
+                flags="rf",
+                type="stvds",
+                input=rm_v,
+                quiet=True,
+                stderr=nulldev,
+            )
+    for rm_v_wv in rm_stvds_w_vectors:
+        if f"{rm_v_wv}@{mapset}" in stvds:
+            grass.run_command(
+                "t.remove",
+                flags="fd",
+                type="stvds",
+                input=rm_v_wv,
                 quiet=True,
                 stderr=nulldev,
             )
