@@ -31,7 +31,7 @@ def general_cleanup(
     rm_dirs=[],
     rm_groups=[],
     rm_groups_w_rasters=[],
-    rm_groups_wo_rasters=[], # kept for backwards compatibility
+    rm_groups_wo_rasters=[],  # kept for backwards compatibility
     rm_regions=[],
     rm_strds=[],
     rm_strds_w_rasters=[],
