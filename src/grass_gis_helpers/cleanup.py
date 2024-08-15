@@ -92,13 +92,13 @@ def general_cleanup(
                 quiet=True,
                 stderr=nulldev,
             )
-    for rm_s_wr in rm_strds_w_rasters:
-        if f"{rm_s_wr}@{mapset}" in strds:
+    for rm_r_wr in rm_strds_w_rasters:
+        if f"{rm_r_wr}@{mapset}" in strds:
             grass.run_command(
                 "t.remove",
                 flags="fd",
                 type="strds",
-                input=rm_s_wr,
+                input=rm_r_wr,
                 quiet=True,
                 stderr=nulldev,
             )
