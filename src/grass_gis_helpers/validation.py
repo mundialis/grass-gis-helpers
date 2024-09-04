@@ -21,14 +21,20 @@ import subprocess
 import grass.script as grass
 
 
-def check_valid_rasterdata(input, strict=True):
-    """Check if input is broken and returns grass.fatal() in this case"""
+def get_gdalinfo_returncodes(input):
+    """Return return codes from reading input file with gdalinfo"""
     gdalinfo_cmd = ["gdalinfo", "-mm", input]
     p_gdalinfo = subprocess.Popen(
         gdalinfo_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     gdalinfo_err = p_gdalinfo.communicate()[1].decode("utf-8")
     gdalinfo_returncode = p_gdalinfo.returncode
+    return gdalinfo_err, gdalinfo_returncode
+
+
+def check_valid_rasterdata(input, strict=True):
+    """Check if input is broken and returns grass.fatal() in this case"""
+    gdalinfo_err, gdalinfo_returncode = get_gdalinfo_returncodes(input)
     if strict:
         # strict check: checks if gdalinfo contains any error
         if gdalinfo_err != "":
