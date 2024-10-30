@@ -41,11 +41,11 @@ A GRASS python module consists of
   - [v.example](https://github.com/mundialis/v.example)
   - ...
 - inside the GRASS GIS source code all python modules are in folder 'scripts'
-- or see https://grasswiki.osgeo.org/wiki/Category:Python, especially https://grasswiki.osgeo.org/wiki/GRASS_Python_Scripting_Library
+- or see <https://grasswiki.osgeo.org/wiki/Category:Python>, especially <https://grasswiki.osgeo.org/wiki/GRASS_Python_Scripting_Library>
 - use `r.blend --script` and it will generate how it would look like as addon (like a template, not a copy of source code!) (will always create generic long version)
-- use of predefinded functions `import grass.script as grass` (e.g. grass.run_command, grass.message, grass.fatal, grass.warning, grass.read_command)
-  - See [script documentation](https://grass.osgeo.org/grass83/manuals/libpython/script.html) for more usage examples
-  - located in 'python/script', please read to avoid to reinvent the wheel
+- use of predefinded functions `import grass.script as grass` (e.g. `grass.run_command`, `grass.message`, `grass.fatal`, `grass.warning`, `grass.read_command`)
+  - See [script documentation](https://grass.osgeo.org/grass-devel/manuals/libpython/script.html) for more usage examples
+  - located in `python/grass/script/`, please read to avoid to reinvent the wheel
   - TODO add docs (but better to read source code because it might be more up-to-date)
 - use of [grass-gis-helpers](https://github.com/mundialis/grass-gis-helpers) library
   - also beware of copying multiple code mutiple times, if there are only small changes. Consider adding methods to [grass-gis-helpers](https://github.com/mundialis/grass-gis-helpers) library instead and reuse.
@@ -79,13 +79,13 @@ A GRASS python module consists of
    - key is key in command line (e.g. 'first')
    - answer is default values
    - access them in main function like `options['first']`
-   - there are also [standard options](%22https://grass.osgeo.org/grass84/manuals/parser_standard_options.html) which can be extended
+   - there are also [standard options](%22https://grass.osgeo.org/grass-devel/manuals/parser_standard_options.html) which can be extended
 
    ###### `# % flag`
 
    ###### `# % rules`
 
-   - define dependencies between options, required options and more. See official [docs](https://grass.osgeo.org/grass84/manuals/g.parser.html#conditional-parameters)
+   - define dependencies between options, required options and more. See official [docs](https://grass.osgeo.org/grass-devel/manuals/g.parser.html#conditional-parameters)
 
 1. `def main():` reads in all variables (`options['first']`)
 
@@ -112,21 +112,25 @@ A GRASS python module consists of
 
 ## Best practises
 
-- python style guide
+- Python style guide
 
-  - [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/%5D)
-  - https://trac.osgeo.org/grass/wiki/Submitting
-  - https://trac.osgeo.org/grass/wiki/Submitting/Python
+  - [PEP 8 - Style Guide for Python Code](https://peps.python.org/pep-0008/%5D)
+  - [GRASS Programming Style Guide](https://github.com/OSGeo/grass/blob/main/doc/development/style_guide.md)
+  - Python section in [GRASS Programming Style Guide](https://github.com/OSGeo/grass/blob/main/doc/development/style_guide.md#python)
 
-- html documentation (no full html please, parts are auto-generated at compile time)
+- C/C++ style guide
 
-  - https://trac.osgeo.org/grass/wiki/Submitting/Docs
+  - C/C++ section in [GRASS Programming Style Guide](https://github.com/OSGeo/grass/blob/main/doc/development/style_guide.md#c-and-c)
 
-- to support i18n, import following module and use macro '\_' before strings. The text after will be replaced with existing lookup tables for other languages
+- HTML documentation (no full html please, parts are auto-generated at compile time)
+
+  - HTML section in [GRASS Programming Style Guide](https://github.com/OSGeo/grass/blob/main/doc/development/style_guide.md#documentation)
+
+- Message translations: to support i18n, import following module and use macro '\_' before strings. The text after will be replaced with existing lookup tables for other languages
 
 - use existing functions: esp. from PyGRASS
 
-  - API description: https://grass.osgeo.org/grass-devel/manuals/libpython/pygrass_index.html
+  - [PyGRASS API description](https://grass.osgeo.org/grass-devel/manuals/libpython/pygrass_index.html)
   - PyGRASS paper: An Object Oriented Python Application Programming Interface (API) for GRASS: https://www.mdpi.com/2220-9964/2/1/201/htm
 
   ```python
@@ -146,7 +150,7 @@ Choose a name depending on the "family":
 - start with `i.` if it is a imagery module
 - start with `db.` if it is a database module
 - try to stick to existing convention but no strickt rules
-- do not name it too long
+- do not use too long module names
 - existing families are d, db, g, i, m, ps, r, r3, t, test and v
 
 ### mundialis / actinia specific
@@ -219,6 +223,8 @@ Choose a name depending on the "family":
 - Black does not fix GRASS GIS parameter `#%`. This can be batch changed with `sed -i 's|^#%|# %|g' foo.py`
 
 - There may not be any linting issues left as the pipeline would fail
+
+- The GRASS GIS project is moving to `ruff`.
 
 #### General steps Part 2
 
