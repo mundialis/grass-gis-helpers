@@ -1,0 +1,3 @@
+---
+default: true
+MD038: false # no-space-in-code Spaces inside code span elements
