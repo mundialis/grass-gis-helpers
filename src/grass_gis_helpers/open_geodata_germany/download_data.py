@@ -31,7 +31,6 @@ import requests
 import zipfile_deflate64
 
 
-
 def check_download_dir(download_dir):
     """Check if download directory is set. If yes, check if folder exists or
     create it. If not set, a temporary directory will be used.
