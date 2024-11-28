@@ -86,7 +86,7 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
         grass.run_command("g.region", vector=aoi, quiet=True)
 
     # url of administrative boundaries
-    URL = (
+    url = (
         "https://daten.gdz.bkg.bund.de/produkte/vg/vg5000_0101/"
         "aktuell/vg5000_01-01.utm32s.shape.ebenen.zip"
     )
@@ -98,7 +98,7 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
     )
     try:
         # check if URL is reachable
-        response = requests.get(URL)
+        response = requests.get(url)
         if not response.status_code == 200:
             grass.fatal(
                 (
@@ -108,7 +108,7 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
             )
 
         # download and import administrative boundaries
-        vsi_url = f"/vsizip/vsicurl/{URL}/{filename}"
+        vsi_url = f"/vsizip/vsicurl/{url}/{filename}"
         grass.run_command(
             "v.import",
             input=vsi_url,

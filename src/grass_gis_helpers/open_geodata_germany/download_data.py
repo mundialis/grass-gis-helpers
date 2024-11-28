@@ -24,11 +24,12 @@
 import fileinput
 from multiprocessing.pool import ThreadPool
 import os
-import requests
-import zipfile_deflate64
 from zipfile import ZipFile
 
 import grass.script as grass
+import requests
+import zipfile_deflate64
+
 
 
 def check_download_dir(download_dir):
@@ -114,10 +115,10 @@ def extract_compressed_files(file_names, download_dir):
     extracted_files = []
     for file_name in file_names:
         file = os.path.join(download_dir, file_name)
-        with ZipFile(file, "r") as zipObj:
-            zip_content = zipObj.namelist()
+        with ZipFile(file, "r") as zipobj:
+            zip_content = zipobj.namelist()
             # Extract all the contents of zip file in current directory
-            zipObj.extractall(download_dir)
+            zipobj.extractall(download_dir)
             extracted_files.extend(zip_content)
     return extracted_files
 
@@ -137,10 +138,10 @@ def extract_compressed_files_deflate64(file_names, download_dir):
     extracted_files = []
     for file_name in file_names:
         file = os.path.join(download_dir, file_name)
-        with zipfile_deflate64.ZipFile(file, "r") as zipObj:
-            zip_content = zipObj.namelist()
+        with zipfile_deflate64.ZipFile(file, "r") as zipobj:
+            zip_content = zipobj.namelist()
             # Extract all the contents of zip file in current directory
-            zipObj.extractall(download_dir)
+            zipobj.extractall(download_dir)
             extracted_files.extend(zip_content)
     return extracted_files
 
