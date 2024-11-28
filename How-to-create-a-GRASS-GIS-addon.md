@@ -24,7 +24,7 @@ variables that define where the GRASS GIS binaries and some auxiliary libraries
 are located and where to find the spatial data. Since GRASS GIS is a modular
 system, only the core libraries are needed as a minimum.
 
-## How to create a GRASS GIS addon
+# How to create a GRASS GIS addon
 
 A GRASS python module consists of
 
@@ -33,7 +33,7 @@ A GRASS python module consists of
 - either a python script (most easy with one script as whole addon)
 - or C code
 
-### Reuse & Recycle... and refactor
+## Reuse & Recycle... and refactor
 
 - it helps if GRASS GIS source code is there to look at
 - best to look at existing GRASS addons
@@ -55,13 +55,13 @@ A GRASS python module consists of
 - Submitting rules:
   - [https://github.com/OSGeo/grass/blob/master/CONTRIBUTING.md](https://github.com/OSGeo/grass/blob/master/CONTRIBUTING.md)
 
-### Structure (here `r.blend` as example)
+## Structure (here `r.blend` as example)
 
 1. shebang (first line)
 
 1. header (author, purpose, license)
 
- 1. `# % ` comments are important (ignored by python but important for parser) <!-- markdownlint-disable-line MD038 -->
+1. `# % ` comments are important (ignored by python but important for parser) <!-- markdownlint-disable-line MD038 -->
 
    - See [https://grass.osgeo.org/grass-devel/manuals/g.parser.html](https://grass.osgeo.org/grass-devel/manuals/g.parser.html)
 
@@ -69,11 +69,11 @@ A GRASS python module consists of
    r.blend -c first=aspect second=elevation output=elev_shade_blend
    ```
 
-   #### `# % module`
+   ### `# % module`
 
    - including `keyword` to make it appear in keyword searches and lists
 
-   #### `# % options`
+   ### `# % options`
 
    - (e.g. 'input', 'output', 'first'), some are predefined (predefined or custom, predefined is more convenient but also needs more knowledge to use)
    - key is key in command line (e.g. 'first')
@@ -81,9 +81,9 @@ A GRASS python module consists of
    - access them in main function like `options['first']`
    - there are also [standard options](%22https://grass.osgeo.org/grass-devel/manuals/parser_standard_options.html) which can be extended
 
-   #### `# % flag`
+   ### `# % flag`
 
-   #### `# % rules`
+   ### `# % rules`
 
    - define dependencies between options, required options and more. See official [docs](https://grass.osgeo.org/grass-devel/manuals/g.parser.html#conditional-parameters)
 
@@ -110,7 +110,7 @@ A GRASS python module consists of
        main()
    ```
 
-## Best practises
+# Best practises
 
 - Python style guide
 
@@ -141,7 +141,7 @@ A GRASS python module consists of
 
 - for this to work use message standardisation (look at locale)
 
-### how to name it
+## how to name it
 
 Choose a name depending on the "family":
 
@@ -153,7 +153,7 @@ Choose a name depending on the "family":
 - do not use too long module names
 - existing families are d, db, g, i, m, ps, r, r3, t, test and v
 
-### mundialis / actinia specific
+## mundialis / actinia specific
 
 - How to handle dependencies (for installation within actinia)
   - use `requirements.txt` for python packages
@@ -164,16 +164,16 @@ Choose a name depending on the "family":
   - $HOME directory might not be what you think (`/root`)
   - ...
 
-## Steps to make the GRASS GIS addon public + open source
+# Steps to make the GRASS GIS addon public + open source
 
-### General code-related steps
+## General code-related steps
 
-#### General steps
+### General steps
 
 - Decide whether it should be a single addon or **multi-module / toolbox**. Example for multi-module is here: [t.sentinel](https://github.com/mundialis/t.sentinel)
 - Check for **sensitive information**. If included, remove them and publish without git history (or rewrite if needed).
 
-#### License + Copyright
+### License + Copyright
 
 - License is GPL3. If no LICENSE.md exists, create it later directly with GitHub (see section below).
 - Copyright: no single person (only as author), `mundialis -> mundialis GmbH & Co. KG`
@@ -195,7 +195,7 @@ Choose a name depending on the "family":
 
 - Adjust year
 
-#### Linting
+### Linting
 
 - Add reusable linting workflow as described [here](https://github.com/mundialis/github-workflows?tab=readme-ov-file#python-linting)
 
@@ -226,7 +226,7 @@ Choose a name depending on the "family":
 
 - The GRASS GIS project is moving to `ruff`.
 
-#### General steps Part 2
+### General steps Part 2
 
 - For GRASS GIS parameters, pay attention to label and description, so that the first word after the `:` is written in capital letters
 - For GRASS GIS module description the sentence should be ended with a point. No point for parameter description or any other parameter value
@@ -237,16 +237,16 @@ Choose a name depending on the "family":
 
 For more information on standardized messages see [here](https://trac.osgeo.org/grass/wiki/MessageStandardization).
 
-#### Tests
+### Tests
 
 - If tests exist, the header should look like in the actual module.
 - If tests exist, the test workflow should be included. [See here](https://github.com/mundialis/github-workflows?tab=readme-ov-file#grass-gis-addon-tests) for instructions.
 
-#### In the end
+### In the end
 
 - Create a merge request in the old repository with your changes, so it can be reviewed there and moved to GitHub when cleanup is done
 
-### Steps on GitHub
+## Steps on GitHub
 
 - Every addon gets its own GitHub repo
   - default location is at [https://github.com/mundialis](https://github.com/mundialis). If needed they can be integrated somewhere else as submodule.
@@ -256,7 +256,7 @@ For more information on standardized messages see [here](https://trac.osgeo.org/
 - Add project label if applicable (e.g. `vale`, `hermosa-earth`, `incora`)
 - Add / update README.md in project repositories which use this addon.
 
-### Cleanup
+## Cleanup
 
 - Delete "old" code from internal repository
 - Add hint to internal repository README that the addon was moved and where to find it
