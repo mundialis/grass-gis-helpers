@@ -4,4 +4,7 @@ on: [push]
 
 jobs:
   lint:
-    uses: mundialis/github-workflows/.github/workflows/linting.yml@1.2.0
+    uses: mundialis/github-workflows/.github/workflows/linting.yml@main
+    with:
+      VALIDATE_JAVASCRIPT_STANDARD: false
+      BASH_SEVERITY: 'warning'

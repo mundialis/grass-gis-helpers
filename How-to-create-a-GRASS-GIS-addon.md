@@ -1,3 +1,5 @@
+# How to create a GRASS-GIS-Addon
+
 ## How does it work at all?
 
 GRASS GIS is written in more than one programming language. While most
@@ -33,7 +35,7 @@ A GRASS python module consists of
 - either a python script (most easy with one script as whole addon)
 - or C code
 
-### Reuse & Recycle... and refactor!
+### Reuse & Recycle... and refactor
 
 - it helps if GRASS GIS source code is there to look at
 - best to look at existing GRASS addons
@@ -41,7 +43,7 @@ A GRASS python module consists of
   - [v.example](https://github.com/mundialis/v.example)
   - ...
 - inside the GRASS GIS source code all python modules are in folder 'scripts'
-- or see <https://grasswiki.osgeo.org/wiki/Category:Python>, especially <https://grasswiki.osgeo.org/wiki/GRASS_Python_Scripting_Library>
+- or see [https://grasswiki.osgeo.org/wiki/Category:Python](https://grasswiki.osgeo.org/wiki/Category:Python), especially [https://grasswiki.osgeo.org/wiki/GRASS_Python_Scripting_Library](https://grasswiki.osgeo.org/wiki/GRASS_Python_Scripting_Library)
 - use `r.blend --script` and it will generate how it would look like as addon (like a template, not a copy of source code!) (will always create generic long version)
 - use of predefinded functions `import grass.script as grass` (e.g. `grass.run_command`, `grass.message`, `grass.fatal`, `grass.warning`, `grass.read_command`)
   - See [script documentation](https://grass.osgeo.org/grass-devel/manuals/libpython/script.html) for more usage examples
@@ -53,7 +55,7 @@ A GRASS python module consists of
   - add linting workflow
   - add workflow to run tests
 - Submitting rules:
-  - https://github.com/OSGeo/grass/blob/master/CONTRIBUTING.md
+  - [https://github.com/OSGeo/grass/blob/master/CONTRIBUTING.md](https://github.com/OSGeo/grass/blob/master/CONTRIBUTING.md)
 
 ### Structure (here `r.blend` as example)
 
@@ -61,19 +63,19 @@ A GRASS python module consists of
 
 1. header (author, purpose, license)
 
-1. `# % ` comments are important (ignored by python but important for parser)
+1. `# % ` comments are important (ignored by python but important for parser) <!-- markdownlint-disable-line MD038 -->
 
-   - See https://grass.osgeo.org/grass-devel/manuals/g.parser.html
+   - See [https://grass.osgeo.org/grass-devel/manuals/g.parser.html](https://grass.osgeo.org/grass-devel/manuals/g.parser.html)
 
    ```shell
    r.blend -c first=aspect second=elevation output=elev_shade_blend
    ```
 
-   ###### `# % module`
+   #### `# % module`
 
    - including `keyword` to make it appear in keyword searches and lists
 
-   ###### `# % options`
+   #### `# % options`
 
    - (e.g. 'input', 'output', 'first'), some are predefined (predefined or custom, predefined is more convenient but also needs more knowledge to use)
    - key is key in command line (e.g. 'first')
@@ -81,9 +83,9 @@ A GRASS python module consists of
    - access them in main function like `options['first']`
    - there are also [standard options](%22https://grass.osgeo.org/grass-devel/manuals/parser_standard_options.html) which can be extended
 
-   ###### `# % flag`
+   #### `# % flag`
 
-   ###### `# % rules`
+   #### `# % rules`
 
    - define dependencies between options, required options and more. See official [docs](https://grass.osgeo.org/grass-devel/manuals/g.parser.html#conditional-parameters)
 
@@ -131,7 +133,7 @@ A GRASS python module consists of
 - use existing functions: esp. from PyGRASS
 
   - [PyGRASS API description](https://grass.osgeo.org/grass-devel/manuals/libpython/pygrass_index.html)
-  - PyGRASS paper: An Object Oriented Python Application Programming Interface (API) for GRASS: https://www.mdpi.com/2220-9964/2/1/201/htm
+  - PyGRASS paper: An Object Oriented Python Application Programming Interface (API) for GRASS: [https://www.mdpi.com/2220-9964/2/1/201/htm](https://www.mdpi.com/2220-9964/2/1/201/htm)
 
   ```python
   # i18N
@@ -249,7 +251,7 @@ For more information on standardized messages see [here](https://trac.osgeo.org/
 ### Steps on GitHub
 
 - Every addon gets its own GitHub repo
-  - default location is at https://github.com/mundialis. If needed they can be integrated somewhere else as submodule.
+  - default location is at [https://github.com/mundialis](https://github.com/mundialis). If needed they can be integrated somewhere else as submodule.
 - Choose "GPL3" as license
 - Copy code to new repository (not via `git remote` if sensitive information are included)
 - Release new addon in GitHub with 1.0.0

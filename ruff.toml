@@ -1,0 +1,43 @@
+# Ruff configuration file: ruff.toml
+
+# Define the required version for Ruff
+required-version = ">=0.7.0"
+
+line-length = 79
+
+# Specify directories or files to be excluded from Ruff linting, in addition to default exclusions
+extend-exclude = [
+    ".git",
+    "__pycache__",
+    ".env",
+    ".venv",
+    "env",
+    "venv",
+    "ENV",
+    "env.bak",
+    "venv.bak",
+    "ctypes",
+    "pydispatch",
+]
+
+# Uncomment the following sections as needed
+
+# [format]
+# Format settings for Ruff (quote-style and indent-style)
+# quote-style = "double"
+# indent-style= "tab"
+
+# [lint]
+# Define linting rules selection and ignore list
+# select = [
+#     "A",        # flake8-builtins (A)
+#     "COM",      # flake8-commas
+#     "PL",       # Pylint
+# ]
+ignore = [
+     "F821",     # Undefined name `_`
+]
+
+# [lint.per-file-ignores]
+# Define file-specific linting rule ignores
+# "lib_dop/r_dop_import_lib.py" = ["ERA001", "PLR2004"]

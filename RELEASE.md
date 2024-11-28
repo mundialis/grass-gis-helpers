@@ -3,7 +3,7 @@
 Steps when releasing:
 
 - Run in terminal
-  ```
+  ``` #!/bin/bash
   ESTIMATED_VERSION=1.0.0
   REPO_NAME=mundialis/grass-gis-helpers
 
