@@ -61,7 +61,7 @@ A GRASS python module consists of
 
 1. header (author, purpose, license)
 
-1. `# % ` comments are important (ignored by python but important for parser)
+ 1. `# % ` comments are important (ignored by python but important for parser) <!-- markdownlint-disable-line MD038 -->
 
    - See [https://grass.osgeo.org/grass-devel/manuals/g.parser.html](https://grass.osgeo.org/grass-devel/manuals/g.parser.html)
 
