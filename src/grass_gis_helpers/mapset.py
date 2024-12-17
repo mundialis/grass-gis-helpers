@@ -22,13 +22,13 @@ import shutil
 import grass.script as grass
 
 
-def switch_to_new_mapset(new_mapset, new = True):
+def switch_to_new_mapset(new_mapset, new=True):
     """The function switches to a new mapset and changes the GISRC file for
     parallel processing.
 
     Args:
         new_mapset (string): Unique name of the new mapset
-        new (boolean): Boolean if existing mapset should be used 
+        new (boolean): Boolean if existing mapset should be used
                        or a new one created
     Returns:
         gisrc (string): The path of the old GISRC file
@@ -46,7 +46,9 @@ def switch_to_new_mapset(new_mapset, new = True):
         grass.utils.try_rmdir(os.path.join(gisdbase, location, new_mapset))
     else:
         grass.message(_(f"Using, not deleting mapset {new_mapset}"))
-        grass.try_remove(os.path.join(gisdbase, location, new_mapset, ".gislock"))
+        grass.try_remove(
+            os.path.join(gisdbase, location, new_mapset, ".gislock")
+        )
 
     gisrc = os.environ["GISRC"]
     newgisrc = f"{gisrc}_{os.getpid()}"
