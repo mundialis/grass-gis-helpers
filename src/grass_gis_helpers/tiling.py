@@ -50,7 +50,10 @@ def create_grid(tile_size, grid_prefix, sid, area=None):
     if dist_ns <= float(tile_size) and dist_ew <= float(tile_size):
         grass.run_command("v.in.region", output=grid, quiet=True)
         grass.run_command(
-            "v.db.addtable", map=grid, columns="cat int", quiet=True,
+            "v.db.addtable",
+            map=grid,
+            columns="cat int",
+            quiet=True,
         )
     else:
         # set region with tile_size
@@ -58,7 +61,10 @@ def create_grid(tile_size, grid_prefix, sid, area=None):
 
         # create grid
         grass.run_command(
-            "v.mkgrid", map=grid, box=f"{tile_size},{tile_size}", quiet=True,
+            "v.mkgrid",
+            map=grid,
+            box=f"{tile_size},{tile_size}",
+            quiet=True,
         )
     # reset region
     reset_region(orig_region)
@@ -86,7 +92,11 @@ def create_grid(tile_size, grid_prefix, sid, area=None):
     # create list of tiles
     tiles_num_list = list(
         grass.parse_command(
-            "v.db.select", map=grid_name, columns="cat", flags="c", quiet=True,
+            "v.db.select",
+            map=grid_name,
+            columns="cat",
+            flags="c",
+            quiet=True,
         ).keys(),
     )
 

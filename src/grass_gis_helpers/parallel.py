@@ -23,7 +23,12 @@ from .mapset import verify_mapsets
 
 
 def run_module_parallel(
-    module, module_kwargs, tile_list, nprocs, uid, parallel=True,
+    module,
+    module_kwargs,
+    tile_list,
+    nprocs,
+    uid,
+    parallel=True,
 ):
     """Running a module in parallel on a grid."""
     # save current mapset

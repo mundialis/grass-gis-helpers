@@ -102,10 +102,8 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
         response = requests.get(url)
         if response.status_code != 200:
             grass.fatal(
-
-                    "The data import of the administrative boundaries are "
-                    "currently not available.",
-
+                "The data import of the administrative boundaries are "
+                "currently not available.",
             )
 
         # download and import administrative boundaries
@@ -145,7 +143,10 @@ def get_federal_states(federal_state, federal_state_file):
             fs_list_str = fs_file.read().strip()
             if fs_list_str == "":
                 grass.fatal(
-                    _("Federal state in <federal_state_file> is empty string!"),
+                    _(
+                        "Federal state in <federal_state_file> is empty "
+                        "string!",
+                    ),
                 )
     elif federal_state:
         fs_list_str = federal_state.strip()

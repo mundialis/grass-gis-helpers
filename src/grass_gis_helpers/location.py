@@ -26,7 +26,9 @@ def get_location_size():
     """Log size of current location."""
     current_gisdbase = grass.gisenv()["GISDBASE"]
     cmd = grass.Popen(
-        f"df -h {current_gisdbase}", shell=True, stdout=subprocess.PIPE,
+        f"df -h {current_gisdbase}",
+        shell=True,
+        stdout=subprocess.PIPE,
     )
     grass.message(
         _(
@@ -67,7 +69,11 @@ def create_tmp_location(epsg=4326):
     # create temp location from input without import
     grass.verbose(_(f"Creating temporary location with EPSG:{epsg}..."))
     grass.run_command(
-        "g.proj", flags="c", location=tmp_loc, quiet=True, **epsg_arg,
+        "g.proj",
+        flags="c",
+        location=tmp_loc,
+        quiet=True,
+        **epsg_arg,
     )
 
     # switch to temp location

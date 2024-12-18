@@ -51,7 +51,9 @@ def general_cleanup(
     for rmg_wr in rm_groups_w_rasters:
         if grass.find_file(name=rmg_wr, element="group")["file"]:
             group_rasters = grass.parse_command(
-                "i.group", flags="lg", group=rmg_wr,
+                "i.group",
+                flags="lg",
+                group=rmg_wr,
             )
             rm_rasters.extend(group_rasters)
             grass.run_command("g.remove", type="group", name=rmg, **kwargs)
@@ -72,7 +74,10 @@ def general_cleanup(
         if find_reg.get("file"):
             grass.run_command("g.region", region=orig_region)
             grass.run_command(
-                "g.remove", type="region", name=orig_region, **kwargs,
+                "g.remove",
+                type="region",
+                name=orig_region,
+                **kwargs,
             )
     for rmreg in rm_regions:
         find_reg = grass.find_file(name=rmreg, element="windows")

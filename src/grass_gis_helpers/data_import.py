@@ -100,7 +100,8 @@ def get_list_of_tindex_locations(tindex, aoi=None):
         tiles = [
             val[0]
             for val in grass.vector_db_select(
-                tindex_clipped, columns="location",
+                tindex_clipped,
+                columns="location",
             )["values"].values()
         ]
     finally:
@@ -284,7 +285,10 @@ def get_xyz_file_infos(xyz_file, separator="space"):
 
 
 def import_single_local_xyz_file(
-    xyz_file, output, use_cur_reg=False, separator="space",
+    xyz_file,
+    output,
+    use_cur_reg=False,
+    separator="space",
 ):
     """Import single XYZ file.
 
@@ -300,7 +304,8 @@ def import_single_local_xyz_file(
 
     """
     res, xyz_reg, shift_needed = get_xyz_file_infos(
-        xyz_file, separator=separator,
+        xyz_file,
+        separator=separator,
     )
     # check if aoi overlaps
     if use_cur_reg:
@@ -440,7 +445,8 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
         recursive=True,
     )
     shp_files = glob.glob(
-        os.path.join(local_data_dir, "**", "*.shp"), recursive=True,
+        os.path.join(local_data_dir, "**", "*.shp"),
+        recursive=True,
     )
     files.extend(shp_files)
 

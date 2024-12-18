@@ -62,7 +62,9 @@ def log_memory(grassenv=None):
     if not grassenv:
         grassenv = grass.gisenv()
     cmd = grass.Popen(
-        f"df -h {grassenv['GISDBASE']}", shell=True, stdout=subprocess.PIPE,
+        f"df -h {grassenv['GISDBASE']}",
+        shell=True,
+        stdout=subprocess.PIPE,
     )
     grass.message(
         _(

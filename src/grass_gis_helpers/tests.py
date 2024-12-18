@@ -44,7 +44,11 @@ def get_number_of_grass_elements():
 
 
 def check_number_of_grass_elements(
-    ref_num_rast, ref_num_vect, ref_num_gr, ref_num_reg, ref_num_mapsets,
+    ref_num_rast,
+    ref_num_vect,
+    ref_num_gr,
+    ref_num_reg,
+    ref_num_mapsets,
 ):
     """Check the number of grass elements.
 
