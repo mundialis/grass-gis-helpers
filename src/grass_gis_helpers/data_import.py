@@ -35,12 +35,13 @@ from .vector import patch_vectors
 
 
 def download_and_import_tindex(tindex_url, output, download_dir):
-    """Download and import tile index from url
+    """Download and import tile index from url.
 
     Args:
         tindex_url (str): URL of tile index
         output (str): The output name for the tile index
         download_dir (str): The directory where the data should be downloaded
+
     """
     cur_dir = os.getcwd()
     zip_name = os.path.basename(tindex_url)
@@ -71,7 +72,7 @@ def download_and_import_tindex(tindex_url, output, download_dir):
 
 def get_list_of_tindex_locations(tindex, aoi=None):
     """Select the locations of the tindex which overlap with the AOI or the
-    current region
+    current region.
 
     Args:
         tindex (str): Name of the tindex vector map
@@ -79,6 +80,7 @@ def get_list_of_tindex_locations(tindex, aoi=None):
     Returns:
         (list): List with locations which overlap with the AOI or the current
                 region
+
     """
     tindex_clipped = f"clipped_tindex_vect_{grass.tempname(8)}"
     try:
@@ -98,7 +100,7 @@ def get_list_of_tindex_locations(tindex, aoi=None):
         tiles = [
             val[0]
             for val in grass.vector_db_select(
-                tindex_clipped, columns="location"
+                tindex_clipped, columns="location",
             )["values"].values()
         ]
     finally:
@@ -132,9 +134,11 @@ def import_local_raster_data(
                           imported; e.g. for DOP import band_dict = {
                               1: "red", 2: "green", 3: "blue", 4: "nir"
                           }
+
     Returns:
         imported_local_data (bool): True if local data imported, otherwise
                                     False
+
     """
     grass.message(_("Importing local raster data..."))
     imported_local_data = False
@@ -187,7 +191,7 @@ def import_local_raster_data(
         err_m2 = "already exists and will be overwritten"
         if err_m1 in r_import[1].decode():
             continue
-        elif err_m2 in r_import[1].decode():
+        if err_m2 in r_import[1].decode():
             pass
         elif r_import[1].decode() != "":
             grass.fatal(_(r_import[1].decode()))
@@ -218,7 +222,7 @@ def import_local_raster_data(
 
 
 def get_xyz_file_infos(xyz_file, separator="space"):
-    """Get the infos of a XYZ file to resolution, bounding box and pixelcenter
+    """Get the infos of a XYZ file to resolution, bounding box and pixelcenter.
 
     Args:
         xyz_file (str): XYZ file path to import
@@ -227,6 +231,7 @@ def get_xyz_file_infos(xyz_file, separator="space"):
         res (float): Resolution of the XYZ file
         xyz_reg (dict): Dictionary with region of the XYZ file
         shift_needed (bool): Boolean if the XYZ file hat to be shifted
+
     """
     gdalinfo_cmd = ["gdalinfo", xyz_file]
     process = grass.Popen(gdalinfo_cmd, stdout=PIPE, stderr=PIPE)
@@ -236,16 +241,16 @@ def get_xyz_file_infos(xyz_file, separator="space"):
     res = float(stdout.split("Pixel Size = (")[1].split(",")[0])
     # get bbox
     bbox_x1 = float(
-        stdout.split("Upper Left")[1].replace("(", "").split(",")[0].strip()
+        stdout.split("Upper Left")[1].replace("(", "").split(",")[0].strip(),
     )
     bbox_x2 = float(
-        stdout.split("Upper Right")[1].replace("(", "").split(",")[0].strip()
+        stdout.split("Upper Right")[1].replace("(", "").split(",")[0].strip(),
     )
     bbox_y1 = float(
-        stdout.split("Upper Left")[1].split(",")[1].split(")")[0].strip()
+        stdout.split("Upper Left")[1].split(",")[1].split(")")[0].strip(),
     )
     bbox_y2 = float(
-        stdout.split("Lower Left")[1].split(",")[1].split(")")[0].strip()
+        stdout.split("Lower Left")[1].split(",")[1].split(")")[0].strip(),
     )
     # check if shift is needed
     # The shift is only needed if the bbox does not contain the pixel centers
@@ -279,9 +284,9 @@ def get_xyz_file_infos(xyz_file, separator="space"):
 
 
 def import_single_local_xyz_file(
-    xyz_file, output, use_cur_reg=False, separator="space"
+    xyz_file, output, use_cur_reg=False, separator="space",
 ):
-    """Import single XYZ file
+    """Import single XYZ file.
 
     Args:
         xyz_file (str): XYZ file path to import
@@ -292,9 +297,10 @@ def import_single_local_xyz_file(
         separator (str): Separator of XYZ file; default is "space"
     Returns:
         output (str): If the output is imported, otherwise return None
+
     """
     res, xyz_reg, shift_needed = get_xyz_file_infos(
-        xyz_file, separator=separator
+        xyz_file, separator=separator,
     )
     # check if aoi overlaps
     if use_cur_reg:
@@ -369,6 +375,7 @@ def import_local_xyz_files(
                                 will be appended
     Returns:
         imported_local_data (bool): True if local data imported, otherwise False
+
     """
     grass.message(_("Importing local XYZ data..."))
     imported_local_data = False
@@ -404,7 +411,7 @@ def import_local_xyz_files(
         if name:
             all_raster.append(name)
             grass.message(
-                _(f"XYZ file <{os.path.basename(xyz_file)}> imported.")
+                _(f"XYZ file <{os.path.basename(xyz_file)}> imported."),
             )
     # check if raster were imported
     if len(all_raster) > 0:
@@ -413,7 +420,7 @@ def import_local_xyz_files(
 
 
 def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
-    """Import vector data from local file path
+    """Import vector data from local file path.
 
     Args:
         aoi_map (str): Name of vector map defining AOI
@@ -423,6 +430,7 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
 
     Returns:
         imported_local_data (bool): True if local data imported, otherwise False
+
     """
     imported_local_data = False
 
@@ -432,7 +440,7 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
         recursive=True,
     )
     shp_files = glob.glob(
-        os.path.join(local_data_dir, "**", "*.shp"), recursive=True
+        os.path.join(local_data_dir, "**", "*.shp"), recursive=True,
     )
     files.extend(shp_files)
 

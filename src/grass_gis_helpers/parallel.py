@@ -23,10 +23,9 @@ from .mapset import verify_mapsets
 
 
 def run_module_parallel(
-    module, module_kwargs, tile_list, nprocs, uid, parallel=True
+    module, module_kwargs, tile_list, nprocs, uid, parallel=True,
 ):
-    """Running a module in parallel on a grid"""
-
+    """Running a module in parallel on a grid."""
     # save current mapset
     start_cur_mapset = grass.gisenv()["MAPSET"]
 
@@ -62,7 +61,7 @@ def run_module_parallel(
                 # exception
                 errmsg = proc.outputs["stderr"].value.strip()
                 grass.fatal(
-                    _(f"\nERROR by processing <{proc.get_bash()}>: {errmsg}")
+                    _(f"\nERROR by processing <{proc.get_bash()}>: {errmsg}"),
                 )
     # print all logs of successfully run modules ordered by module as GRASS
     # message
@@ -79,7 +78,7 @@ def run_module_parallel(
 
 
 def patching_vector_results(mapsets, output):
-    """Patching vector results of different mapsets into one together"""
+    """Patching vector results of different mapsets into one together."""
     grass.message(_(f"Patching vector {output} subsets ..."))
     if len(mapsets) > 1:
         subset_mapset = [f"{output}@{m}" for m in mapsets]
@@ -100,7 +99,7 @@ def patching_vector_results(mapsets, output):
 
 
 def patching_raster_results(mapsets, output):
-    """Patching raster results of different mapsets into one together"""
+    """Patching raster results of different mapsets into one together."""
     grass.message(_(f"Patching raster {output} subsets ..."))
     if len(mapsets) > 1:
         subset_mapset = [f"{output}@{m}" for m in mapsets]
