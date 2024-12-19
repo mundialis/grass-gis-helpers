@@ -22,6 +22,36 @@ from grass.pygrass.modules import Module, ParallelModuleQueue
 from .mapset import verify_mapsets
 
 
+def check_parallel_errors(queue):
+    """Check a parallel queue for errors in the worker modules by parsing
+    the stderr output for errors. A GRASS fatal will be thrown in this case.
+    To be used as except in a try/except block around a parallel GRASS
+    processing queue.
+    """
+    for proc_num in range(queue.get_num_run_procs()):
+        proc = queue.get(proc_num)
+        if proc.returncode != 0:
+            # save all stderr to a variable and pass it to a GRASS
+            # exception
+            errmsg = proc.outputs["stderr"].value.strip()
+            grass.fatal(
+                _(f"\nERROR processing <{proc.get_bash()}>: {errmsg}"),
+            )
+
+
+def check_parallel_warnings(queue):
+    """Check a parallel queue for warnings in the worker modules by parsing
+    the stderr output for warnings. A GRASS warning will be issued in this case.
+    To be used after a successfully run processing queue.
+    """
+    for mod in queue.get_finished_modules():
+        stderr = mod.outputs["stderr"].value.strip()
+        if "WARN" in stderr:
+            grass.warning(
+                _(f"\nWARNING processing <{mod.get_bash()}>: {stderr}"),
+            )
+
+
 def run_module_parallel(
     module,
     module_kwargs,
