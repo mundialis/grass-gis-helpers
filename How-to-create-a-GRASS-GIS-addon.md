@@ -74,6 +74,8 @@ A GRASS python module consists of
    #### `# % module`
 
    - including `keyword` to make it appear in keyword searches and lists
+     - If the content is related to neural networks, use the keyword "neural network" to be able to group them:
+       - `# % keyword: neural network`
 
    #### `# % options`
 
