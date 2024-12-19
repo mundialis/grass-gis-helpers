@@ -48,7 +48,7 @@ def check_parallel_warnings(queue):
         stderr = mod.outputs["stderr"].value.strip()
         if "WARN" in stderr:
             grass.warning(
-                _(f"\nWARNING processing <{mod.get_bash()}>: {stderr}")
+                _(f"\nWARNING processing <{mod.get_bash()}>: {stderr}"),
             )
 
 
