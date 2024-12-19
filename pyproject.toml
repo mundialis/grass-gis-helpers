@@ -7,6 +7,13 @@ name = "grass_gis_helpers"
 version = "0.1.0"
 authors = [
   { name="Anika Weinmann", email="weinmann@mundialis.de" },
+  { name="Carmen Tawalika", email="tawalika@mundialis.de" },
+  { name="Guido Riembauer", email="riembauer@mundialis.de" },
+  { name="Johannes Halbauer", email="halbauer@mundialis.de" },
+  { name="Julia Haas", email="haas@mundialis.de" },
+  { name="Lina Krisztian", email="krisztian@mundialis.de" },
+  { name="Markus Neteler", email="neteler@mundialis.de" },
+  { name="Victoria-Leandra Brunn", email="brunn@mundialis.de" },
 ]
 maintainers = [{name="mundialis GmbH & Co. KG", email="info@mundialis.de"}]
 description = "This library provides functions which can be used for developing GRASS GIS addons."
