@@ -27,16 +27,17 @@ import grass.script as grass
 
 def adjust_raster_resolution(raster_name, output, res):
     """Resample or inpolate raster to given resolution. It is important that
-    the region already has the right resolution
+    the region already has the right resolution.
 
     Args:
         raster_name (str): The name of the raster map which should be
                            resampled/interpolated
         output (str): The name for the resampled/interpolated raster map
         res (float): The resolution to which the raster should be resampled.
+
     """
     res_rast = float(
-        grass.parse_command("r.info", map=raster_name, flags="g")["nsres"]
+        grass.parse_command("r.info", map=raster_name, flags="g")["nsres"],
     )
     if res_rast > res:
         grass.run_command(
@@ -68,6 +69,7 @@ def create_vrt(input_raster_list, output):
     Args:
         input_raster_list (list): List with input raster maps
         output (str): Name of the output (vrt) raster map
+
     """
     # copy raster maps to current mapset
     for rast in input_raster_list:
@@ -98,11 +100,12 @@ def create_vrt(input_raster_list, output):
 
 
 def rename_raster(band_name_old, band_name_new):
-    """Rename raster map
+    """Rename raster map.
 
     Args:
         band_name_old (str): Raster map name to rename
         band_name_new (str): The new name for the raster map
+
     """
     grass.run_command(
         "g.rename",

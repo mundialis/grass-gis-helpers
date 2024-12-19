@@ -62,7 +62,7 @@ FS_ABBREVIATION = {
 
 
 def import_administrative_boundaries(output, aoi=None, level="KRS"):
-    """Import administrative boundaries for AOI/region
+    """Import administrative boundaries for AOI/region.
 
     Args:
         output (str): The name for the output vector map with the imported
@@ -78,6 +78,7 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
                      KRS - Kreise
                      VWG - Verwaltungsgemeinschaften
                      GEM - Gemeinden
+
     """
     # save current region and set region to AOI
     if aoi:
@@ -99,12 +100,10 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
     try:
         # check if URL is reachable
         response = requests.get(url)
-        if not response.status_code == 200:
+        if response.status_code != 200:
             grass.fatal(
-                (
-                    "The data import of the administrative boundaries are "
-                    "currently not available."
-                )
+                "The data import of the administrative boundaries are "
+                "currently not available.",
             )
 
         # download and import administrative boundaries
@@ -123,7 +122,7 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
 
 def get_federal_states(federal_state, federal_state_file):
     """Get federal state and federal state file module parameters and return
-    list with federal state abbreviations
+    list with federal state abbreviations.
 
     Args:
         federal_state (str): Federal state module parameter
@@ -137,14 +136,17 @@ def get_federal_states(federal_state, federal_state_file):
             grass.fatal(
                 _(
                     "Federal state file is given, but file "
-                    f"<{federal_state_file}> does not exist."
-                )
+                    f"<{federal_state_file}> does not exist.",
+                ),
             )
-        with open(federal_state_file) as fs_file:
+        with open(federal_state_file, encoding="utf-8") as fs_file:
             fs_list_str = fs_file.read().strip()
             if fs_list_str == "":
                 grass.fatal(
-                    _("Federal state in <federal_state_file> is empty string!")
+                    _(
+                        "Federal state in <federal_state_file> is empty "
+                        "string!",
+                    ),
                 )
     elif federal_state:
         fs_list_str = federal_state.strip()
@@ -152,8 +154,8 @@ def get_federal_states(federal_state, federal_state_file):
         grass.fatal(
             _(
                 "Neither <federal_state> nor <federal_state_file> are given. "
-                "Please set one of the two."
-            )
+                "Please set one of the two.",
+            ),
         )
     fs_list = []
     for fs in fs_list_str.split(","):

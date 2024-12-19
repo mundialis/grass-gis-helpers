@@ -20,7 +20,7 @@ import grass.script as grass
 
 
 def get_number_of_grass_elements():
-    """Get the number of grass elements like raster, vector and regions
+    """Get the number of grass elements like raster, vector and regions.
 
     Returns:
         num_rast (int): The number of raster maps in current mapset
@@ -28,6 +28,7 @@ def get_number_of_grass_elements():
         num_gr (int): The number of groups in current mapset
         num_reg (int): The number of regions in current mapset
         num_mapsets (int): The number of mapsets in current location
+
     """
     rast_list = grass.parse_command("g.list", type="raster")
     vect_list = grass.parse_command("g.list", type="vector")
@@ -43,9 +44,13 @@ def get_number_of_grass_elements():
 
 
 def check_number_of_grass_elements(
-    ref_num_rast, ref_num_vect, ref_num_gr, ref_num_reg, ref_num_mapsets
+    ref_num_rast,
+    ref_num_vect,
+    ref_num_gr,
+    ref_num_reg,
+    ref_num_mapsets,
 ):
-    """Check the number of grass elements
+    """Check the number of grass elements.
 
     Args:
         ref_num_rast (int): The reference number of raster maps

@@ -23,10 +23,12 @@ import grass.script as grass
 
 
 def get_location_size():
-    """Log size of current location"""
+    """Log size of current location."""
     current_gisdbase = grass.gisenv()["GISDBASE"]
     cmd = grass.Popen(
-        f"df -h {current_gisdbase}", shell=True, stdout=subprocess.PIPE
+        f"df -h {current_gisdbase}",
+        shell=True,
+        stdout=subprocess.PIPE,
     )
     grass.message(
         _(
@@ -34,12 +36,12 @@ def get_location_size():
                 "\nDisk usage of GRASS GIS database:\n",
                 f"{cmd.communicate()[0].decode('utf-8').rstrip()}\n",
             ),
-        )
+        ),
     )
 
 
 def create_tmp_location(epsg=4326):
-    """Creation of a new temporary location
+    """Creation of a new temporary location.
 
     Args:
         epsg (int): The number of the EPSG code
@@ -47,11 +49,12 @@ def create_tmp_location(epsg=4326):
     Returns:
         tmp_loc (str): The name of the temporary location
         tmp_gisrc (str): The path to the original GISRC file
+
     """
     current_gisdbase = grass.gisenv()["GISDBASE"]
     srcgisrc = grass.tempfile()
     tmp_loc = f"temp_epsg{epsg}_location_{os.getpid()}"
-    gisrc_file = open(srcgisrc, "w")
+    gisrc_file = open(srcgisrc, "w", encoding="utf-8")
     gisrc_file.write("MAPSET: PERMANENT\n")
     gisrc_file.write(f"GISDBASE: {current_gisdbase}\n")
     gisrc_file.write(f"LOCATION_NAME: {tmp_loc}\n")
@@ -66,7 +69,11 @@ def create_tmp_location(epsg=4326):
     # create temp location from input without import
     grass.verbose(_(f"Creating temporary location with EPSG:{epsg}..."))
     grass.run_command(
-        "g.proj", flags="c", location=tmp_loc, quiet=True, **epsg_arg
+        "g.proj",
+        flags="c",
+        location=tmp_loc,
+        quiet=True,
+        **epsg_arg,
     )
 
     # switch to temp location
@@ -83,13 +90,14 @@ def create_tmp_location(epsg=4326):
 
 
 def get_current_location():
-    """Get infos to current location
+    """Get infos to current location.
 
     Returns:
         loc (str): The name of the current location
         mapset (str): The name of the current mapset
         gisdbase (str): The current GISDBASE info
         gisrc (str): The path to the current GISRC file
+
     """
     # get current location, mapset, ...
     grassenv = grass.gisenv()
@@ -102,10 +110,11 @@ def get_current_location():
 
 def switch_back_original_location(original_gisrc):
     """Switching back to original location after the computation in tmp
-    location
+    location.
 
     Args:
         original_gisrc (str): The path to the original GISRC file
+
     """
     # switch to target location
     os.environ["GISRC"] = str(original_gisrc)
