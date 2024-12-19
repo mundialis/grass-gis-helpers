@@ -42,8 +42,7 @@ def check_parallel_errors(queue):
 def check_parallel_warnings(queue):
     """Check a parallel queue for warnings in the worker modules by parsing
     the stderr output for warnings. A GRASS warning will be issued in this case.
-    To be used as except in a try/except block around a parallel GRASS
-    processing queue.
+    To be used after a successfully run processing queue.
     """
     for mod in queue.get_finished_modules():
         stderr = mod.outputs["stderr"].value.strip()
