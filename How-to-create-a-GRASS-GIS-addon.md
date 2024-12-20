@@ -50,7 +50,7 @@ A GRASS python module consists of
   - located in `python/grass/script/`, please read to avoid to reinvent the wheel
   - TODO add docs (but better to read source code because it might be more up-to-date)
 - use of [grass-gis-helpers](https://github.com/mundialis/grass-gis-helpers) library
-  - also beware of copying multiple code mutiple times, if there are only small changes. Consider adding methods to [grass-gis-helpers](https://github.com/mundialis/grass-gis-helpers) library instead and reuse.
+  - also beware of copying multiple code multiple times, if there are only small changes (i.e., avoid cloning of code). Consider adding methods to [grass-gis-helpers](https://github.com/mundialis/grass-gis-helpers) library instead and reuse.
 - use of [github-workflows](https://github.com/mundialis/github-workflows)
   - add linting workflow
   - add workflow to run tests
