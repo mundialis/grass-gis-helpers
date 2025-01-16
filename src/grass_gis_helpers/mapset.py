@@ -43,10 +43,10 @@ def switch_to_new_mapset(new_mapset, new=True):
     old_mapset = env["MAPSET"]
 
     if new:
-        grass.message(_(f"New mapset {new_mapset}"))
+        grass.verbose(_(f"New mapset {new_mapset}"))
         grass.utils.try_rmdir(os.path.join(gisdbase, location, new_mapset))
     else:
-        grass.message(_(f"Using, not deleting mapset {new_mapset}"))
+        grass.verbose(_(f"Using, not deleting mapset {new_mapset}"))
         grass.try_remove(
             os.path.join(gisdbase, location, new_mapset, ".gislock"),
         )
@@ -57,8 +57,8 @@ def switch_to_new_mapset(new_mapset, new=True):
     shutil.copyfile(gisrc, newgisrc)
     os.environ["GISRC"] = newgisrc
 
-    grass.message(f"GISRC: {os.environ['GISRC']}")
-    grass.run_command("g.mapset", flags="c", mapset=new_mapset)
+    grass.verbose(f"GISRC: {os.environ['GISRC']}")
+    grass.run_command("g.mapset", flags="c", mapset=new_mapset, quiet=True)
 
     # verify that switching of the mapset worked
     cur_mapset = grass.gisenv()["MAPSET"]
