@@ -27,6 +27,7 @@ classifiers = [
 dependencies = [
   "psutil",
   "requests",
+  "wget",
   "zipfile_deflate64",
 ]
 
