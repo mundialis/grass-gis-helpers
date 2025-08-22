@@ -25,7 +25,7 @@ import grass.script as grass
 def get_location_size():
     """Log size of current location."""
     current_gisdbase = grass.gisenv()["GISDBASE"]
-    cmd = grass.Popen(
+    cmd = subprocess.Popen(
         f"df -h {current_gisdbase}",
         shell=True,
         stdout=subprocess.PIPE,
