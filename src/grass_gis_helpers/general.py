@@ -61,7 +61,7 @@ def log_memory(grassenv=None):
     """Log memory usage."""
     if not grassenv:
         grassenv = grass.gisenv()
-    cmd = grass.Popen(
+    cmd = subprocess.Popen(
         f"df -h {grassenv['GISDBASE']}",
         shell=True,
         stdout=subprocess.PIPE,
@@ -78,7 +78,7 @@ def log_memory(grassenv=None):
     grass.message(_(f"\nmemory: \n{psutil.virtual_memory()!s}"))
     grass.message(_(f"\nswap memory: \n{psutil.swap_memory()!s}"))
     # ulimit -a
-    cmd = grass.Popen("ulimit -a", shell=True, stdout=subprocess.PIPE)
+    cmd = subprocess.Popen("ulimit -a", shell=True, stdout=subprocess.PIPE)
     grass.message(
         _(f"\nulimit -a: \n{cmd.communicate()[0].decode('utf-8').rstrip()}"),
     )

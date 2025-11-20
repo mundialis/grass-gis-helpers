@@ -23,6 +23,7 @@
 
 import glob
 import os
+import subprocess
 from subprocess import PIPE
 import wget
 
@@ -235,7 +236,7 @@ def get_xyz_file_infos(xyz_file, separator="space"):
 
     """
     gdalinfo_cmd = ["gdalinfo", xyz_file]
-    process = grass.Popen(gdalinfo_cmd, stdout=PIPE, stderr=PIPE)
+    process = subprocess.Popen(gdalinfo_cmd, stdout=PIPE, stderr=PIPE)
     stdout = process.communicate()[0].decode("utf-8").strip()
     # output vom ogrinfo:
     # z.B.: Pixel Size = (1.000000000000000,1.000000000000000)
