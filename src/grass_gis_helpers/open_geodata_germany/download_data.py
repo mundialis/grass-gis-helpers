@@ -74,8 +74,7 @@ def url_response(url):
     filename = os.path.basename(url)
     response = requests.get(url, stream=True)
     with open(str(filename), "wb") as f:
-        for chunk in response:
-            f.write(chunk)
+        f.writelines(response)
     return url
 
 
