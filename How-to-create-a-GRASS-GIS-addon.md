@@ -201,7 +201,7 @@ Choose a name depending on the "family":
 
 #### Linting
 
-- Add reusable linting workflow as described [here](https://github.com/mundialis/github-workflows?tab=readme-ov-file#python-linting)
+- Add reusable linting workflow as described [github-workflows](https://github.com/mundialis/github-workflows?tab=readme-ov-file#python-linting)
 
   ```yaml
   name: Python Flake8, black and pylint code quality check
@@ -239,12 +239,12 @@ Choose a name depending on the "family":
   - NOTE that variables should not go into the macro, e.g. `grass.message(_("Created output group <%s>") % output)` instead of `grass.message(_("Created output group <%s>" % output))`
 - There should be no space between the text and suspension points, e.g. `Reading raster map...` instead of `Reading raster map ...`
 
-For more information on standardized messages see [here](https://trac.osgeo.org/grass/wiki/MessageStandardization).
+For more information on standardized messages see [GRASS Message Standardization](https://trac.osgeo.org/grass/wiki/MessageStandardization).
 
 #### Tests
 
 - If tests exist, the header should look like in the actual module.
-- If tests exist, the test workflow should be included. [See here](https://github.com/mundialis/github-workflows?tab=readme-ov-file#grass-gis-addon-tests) for instructions.
+- If tests exist, the test workflow should be included. [github workflows - GRASS tests](https://github.com/mundialis/github-workflows?tab=readme-ov-file#grass-gis-addon-tests) for instructions.
 
 #### In the end
 
