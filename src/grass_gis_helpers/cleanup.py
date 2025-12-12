@@ -8,7 +8,7 @@
 #
 # PURPOSE:      lib with cleanup related helper functions for GRASS GIS
 #
-# COPYRIGHT:	(C) 2023 by mundialis and the GRASS Development Team
+# COPYRIGHT:	(C) 2023-2025 by mundialis and the GRASS Development Team
 #
 # 		This program is free software under the GNU General Public
 # 		License (>=v2). Read the file COPYING that comes with GRASS
@@ -39,6 +39,7 @@ def general_cleanup(
     rm_stvds_w_vectors=[],
     orig_region=None,
     rm_mask=False,
+    location_size=False,
 ):
     """General cleanup function."""
     grass.message(_("Cleaning up..."))
@@ -142,7 +143,8 @@ def general_cleanup(
         grass.run_command("r.mask", flags="r")
 
     # get location size
-    get_location_size()
+    if location_size:
+        get_location_size()
 
     # Garbage Collector: release unreferenced memory
     gc.collect()
