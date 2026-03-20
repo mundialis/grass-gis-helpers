@@ -50,6 +50,7 @@ def adjust_raster_resolution(raster_name, output, res, type=None):
             "r.resamp.interp",
             input=raster_name,
             output=resamp_out,
+            nrpocs=1,
             overwrite=True,
             quiet=True,
         )
