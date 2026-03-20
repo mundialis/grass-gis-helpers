@@ -43,7 +43,7 @@ def adjust_raster_resolution(raster_name, output, res, type=None):
         grass.parse_command("r.info", map=raster_name, flags="g")["nsres"],
     )
     resamp_out = output
-    if type == "CELL":
+    if type == "CELL" and res_rast != res:
         resamp_out = f"{output}_tmp"
     if res_rast > res:
         grass.run_command(
