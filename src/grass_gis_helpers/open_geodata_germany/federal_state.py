@@ -22,7 +22,7 @@
 ############################################################################
 
 import os
-import requests
+from time import sleep
 import grass.script as grass
 
 FS_ABBREVIATION = {
@@ -97,27 +97,34 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
         "vg5000_ebenen_0101",
         f"VG5000_{level}.shp",
     )
-    try:
-        # check if URL is reachable
-        response = requests.get(url)
-        if response.status_code != 200:
-            grass.fatal(
-                "The data import of the administrative boundaries are "
-                "currently not available.",
+    RETRIES = 10
+    trydownload = True
+    count = 0
+    while trydownload:
+        try:
+            count += 1
+            # download and import administrative boundaries
+            vsi_url = f"/vsizip/vsicurl/{url}/{filename}"
+            grass.run_command(
+                "v.import",
+                input=vsi_url,
+                output=output,
+                extent="region",
+                quiet=True,
             )
-
-        # download and import administrative boundaries
-        vsi_url = f"/vsizip/vsicurl/{url}/{filename}"
-        grass.run_command(
-            "v.import",
-            input=vsi_url,
-            output=output,
-            extent="region",
-            quiet=True,
-        )
-    finally:
-        if aoi:
-            grass.run_command("g.region", region=reg)
+            trydownload = False
+        except Exception:
+            grass.message(_("Retry download..."))
+            if count > (RETRIES / 2):
+                trydownload = False
+                grass.fatal(
+                    "The data import of the administrative boundaries via "
+                    f"{vsi_url} is currently not available.",
+                )
+            sleep(10)
+        finally:
+            if not trydownload and aoi:
+                grass.run_command("g.region", region=reg)
 
 
 def get_federal_states(federal_state, federal_state_file):
