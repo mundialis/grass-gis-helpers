@@ -179,22 +179,13 @@ Choose a name depending on the "family":
 
 #### License + Copyright
 
-- License is GPL3. If no LICENSE.md exists, create it later directly with GitHub (see section below).
+- License is GPL3-or-later. If no LICENSE.md exists, create it later directly with GitHub (see section below). The SPDX `reuse` tool adds it with `reuse download --all` into a `LICENSES/` subdirectory which is useful when multiple licenses are used
 - Copyright: no single person (only as author), `mundialis -> mundialis GmbH & Co. KG`
 - Add license information to `*.py` file header:
 
 ```shell
-# COPYRIGHT:    (C) 2021-2024 by mundialis GmbH & Co. KG and the GRASS Development Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# SPDX-FileCopyrightText: (c) 2021-2025 by mundialis GmbH & Co. KG and the GRASS Development Team
+# SPDX-License-Identifier: GPL-3.0-or-later
 ```
 
 - Adjust year
