@@ -97,7 +97,7 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
         "vg5000_ebenen_0101",
         f"VG5000_{level}.shp",
     )
-    RETRIES = 10
+    max_retries = 10
     trydownload = True
     count = 0
     while trydownload:
@@ -115,7 +115,7 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
             trydownload = False
         except Exception:
             grass.message(_("Retry download..."))
-            if count > (RETRIES / 2):
+            if count > (max_retries / 2):
                 trydownload = False
                 grass.fatal(
                     "The data import of the administrative boundaries via "

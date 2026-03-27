@@ -17,6 +17,7 @@ lint.ignore = [
     "FURB101",
     "I001",
     "INT001",
+    "PERF203",  # try-except-in-loop
     "PERF401",
     "PLC1901",
     "PLR0912",
