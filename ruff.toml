@@ -46,4 +46,5 @@ lint.ignore = [
     "S604",
     "S605",
     "S607",  # start-process-with-partial-path
+    "TRY203",
 ]

@@ -117,7 +117,7 @@ def clean_vector_cat(input, output):
             key="cat",
             layer=1,
         )
-        for col in vec_cols.keys():
+        for col in vec_cols:
             grass.run_command(
                 "v.to.db",
                 map=out_tmp3,
@@ -142,7 +142,7 @@ def clean_vector_cat(input, output):
             layer=2,
             cat=-1,
         )
-    except Exception as e:
-        raise e
+    except Exception:
+        raise
     finally:
         general_cleanup(rm_vectors=rm_vector)
