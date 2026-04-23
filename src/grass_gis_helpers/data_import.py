@@ -196,7 +196,7 @@ def import_local_raster_data(
         r_import = communicate_grass_command("r.import", **kwargs)
         err_m1 = "Input raster does not overlap current computational region."
         err_m2 = "already exists and will be overwritten"
-        stderr_val  = r_import[1]
+        stderr_val = r_import[1]
         if isinstance(stderr_val, bytes):
             stderr_val = stderr_val.decode()
         if err_m1 in stderr_val:
