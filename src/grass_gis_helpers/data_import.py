@@ -156,6 +156,11 @@ def import_local_raster_data(
             os.path.join(local_data_dir, "**", "*.tif"),
             recursive=True,
         )
+    if not raster_files:
+        raster_files = glob.glob(
+            os.path.join(local_data_dir, "**", "*.jp2"),
+            recursive=True,
+        )
 
     # get current region
     cur_reg = grass.region()
@@ -191,12 +196,15 @@ def import_local_raster_data(
         r_import = communicate_grass_command("r.import", **kwargs)
         err_m1 = "Input raster does not overlap current computational region."
         err_m2 = "already exists and will be overwritten"
-        if err_m1 in r_import[1].decode():
+        stderr_val  = r_import[1]
+        if isinstance(stderr_val, bytes):
+            stderr_val = stderr_val.decode()
+        if err_m1 in stderr_val:
             continue
-        if err_m2 in r_import[1].decode():
+        if err_m2 in stderr_val:
             pass
-        elif r_import[1].decode() != "":
-            grass.fatal(_(r_import[1].decode()))
+        elif stderr_val != "":
+            grass.fatal(_(stderr_val))
 
         # resample / interpolate data
         for band_num, band in band_dict.items():
