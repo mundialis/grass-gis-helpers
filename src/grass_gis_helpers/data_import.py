@@ -231,12 +231,13 @@ def import_local_raster_data(
     return imported_local_data
 
 
-def get_xyz_file_infos(xyz_file, separator="space"):
+def get_xyz_file_infos(xyz_file, separator="space", skip=0):
     """Get the infos of a XYZ file to resolution, bounding box and pixelcenter.
 
     Args:
         xyz_file (str): XYZ file path to import
         separator (str): Separator of XYZ file; default is "space"
+        skip (int): Number of rows to skip within XYZ file
     Returns:
         res (float): Resolution of the XYZ file
         xyz_reg (dict): Dictionary with region of the XYZ file
@@ -281,6 +282,7 @@ def get_xyz_file_infos(xyz_file, separator="space"):
         input=xyz_file,
         flags="sg",
         separator=separator,
+        skip=skip,
     )
     xyz_reg = {
         item.split("=")[0]: float(item.split("=")[1])
@@ -298,6 +300,7 @@ def import_single_local_xyz_file(
     output,
     use_cur_reg=False,
     separator="space",
+    skip=0,
 ):
     """Import single XYZ file.
 
@@ -308,6 +311,7 @@ def import_single_local_xyz_file(
                             overlaps with the current region, otherwise it
                             will not be imported
         separator (str): Separator of XYZ file; default is "space"
+        skip (int): Number of rows to skip within XYZ file
     Returns:
         output (str): If the output is imported, otherwise return None
 
@@ -315,6 +319,7 @@ def import_single_local_xyz_file(
     res, xyz_reg, shift_needed = get_xyz_file_infos(
         xyz_file,
         separator=separator,
+        skip=skip,
     )
     # check if aoi overlaps
     if use_cur_reg:
@@ -355,6 +360,7 @@ def import_single_local_xyz_file(
         output=output,
         method="mean",
         separator=separator,
+        skip=skip,
         quiet=True,
         overwrite=True,
     )
