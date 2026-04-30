@@ -231,12 +231,13 @@ def import_local_raster_data(
     return imported_local_data
 
 
-def get_xyz_file_infos(xyz_file, separator="space",skip=0):
+def get_xyz_file_infos(xyz_file, separator="space", skip=0):
     """Get the infos of a XYZ file to resolution, bounding box and pixelcenter.
 
     Args:
         xyz_file (str): XYZ file path to import
         separator (str): Separator of XYZ file; default is "space"
+        skip (int): Number of rows to skip within XYZ file
     Returns:
         res (float): Resolution of the XYZ file
         xyz_reg (dict): Dictionary with region of the XYZ file
@@ -310,6 +311,7 @@ def import_single_local_xyz_file(
                             overlaps with the current region, otherwise it
                             will not be imported
         separator (str): Separator of XYZ file; default is "space"
+        skip (int): Number of rows to skip within XYZ file
     Returns:
         output (str): If the output is imported, otherwise return None
 
