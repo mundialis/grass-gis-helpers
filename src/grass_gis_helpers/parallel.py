@@ -33,7 +33,8 @@ def check_parallel_errors(queue):
         if proc.returncode != 0:
             # save all stderr to a variable and pass it to a GRASS
             # exception
-            errmsg = proc.outputs["stderr"].value.strip()
+            stderr = proc.outputs["stderr"].value
+            errmsg = stderr.strip() if stderr else "No stderr."
             grass.fatal(
                 _(f"\nERROR processing <{proc.get_bash()}>: {errmsg}"),
             )
@@ -94,14 +95,16 @@ def run_module_parallel(
             if proc.returncode != 0:
                 # save all stderr to a variable and pass it to a GRASS
                 # exception
-                errmsg = proc.outputs["stderr"].value.strip()
+                stderr = proc.outputs["stderr"].value
+                errmsg = stderr.strip() if stderr else "No stderr."
                 grass.fatal(
                     _(f"\nERROR by processing <{proc.get_bash()}>: {errmsg}"),
                 )
     # print all logs of successfully run modules ordered by module as GRASS
     # message
     for proc in queue.get_finished_modules():
-        msg = proc.outputs["stderr"].value.strip()
+        stderr = proc.outputs["stderr"].value
+        msg = stderr.strip() if stderr else "No stderr."
         grass.message(_(f"\nLog of {proc.get_bash()}:"))
         for msg_part in msg.split("\n"):
             if len(msg_part) > 0:
