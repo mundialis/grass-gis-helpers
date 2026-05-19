@@ -25,7 +25,9 @@
 import grass.script as grass
 
 
-def adjust_raster_resolution(raster_name, output, res, interp_method="bilinear", type=None):
+def adjust_raster_resolution(
+    raster_name, output, res, interp_method="bilinear", type=None
+):
     """Resample or inpolate raster to given resolution. It is important that
     the region already has the right resolution.
 
