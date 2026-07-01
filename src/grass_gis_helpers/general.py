@@ -32,8 +32,8 @@ def set_nprocs(nprocs):
     nprocs_real = mp.cpu_count()
     if nprocs > nprocs_real:
         grass.warning(
-            f"Using {nprocs} parallel processes but only "
-            f"{nprocs_real} CPUs available.",
+            f"Using {nprocs} parallel processes but only {nprocs_real} CPUs"
+            f" available.",
         )
     return nprocs
 

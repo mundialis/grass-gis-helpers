@@ -391,10 +391,10 @@ def import_single_local_xyz_file(
     if shift_needed:
         grass.run_command(
             "g.region",
-            n=f"n+{res / 2.}",
-            s=f"s+{res / 2.}",
-            w=f"w+{res / 2.}",
-            e=f"e+{res / 2.}",
+            n=f"n+{res / 2.0}",
+            s=f"s+{res / 2.0}",
+            w=f"w+{res / 2.0}",
+            e=f"e+{res / 2.0}",
             res=res,
         )
         grass.run_command("r.region", map=output, flags="c")
