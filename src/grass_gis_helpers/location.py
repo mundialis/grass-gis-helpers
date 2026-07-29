@@ -70,7 +70,7 @@ def create_tmp_location(epsg=4326):
     grass.run_command(
         "g.proj",
         flags="c",
-        location=tmp_loc,
+        project=tmp_loc,
         quiet=True,
         **epsg_arg,
     )
