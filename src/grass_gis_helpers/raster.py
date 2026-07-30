@@ -149,7 +149,7 @@ def rename_raster(band_name_old, band_name_new):
 
 
 def vrt_to_raster(vrt_input, raster_output):
-    """Rename raster map.
+    """Computing raster map from VRT.
 
     Args:
         band_name_old (str): Raster map name to rename
