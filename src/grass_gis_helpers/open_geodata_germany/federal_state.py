@@ -151,8 +151,8 @@ def get_federal_states(federal_state, federal_state_file):
             if fs_list_str == "":
                 grass.fatal(
                     _(
-                        "Federal state in <federal_state_file> is empty "
-                        "string!",
+                        "Federal state in <federal_state_file> is empty"
+                        " string!",
                     ),
                 )
     elif federal_state:
