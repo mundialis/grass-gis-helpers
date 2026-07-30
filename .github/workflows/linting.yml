@@ -10,7 +10,5 @@ jobs:
   lint:
     uses: mundialis/github-workflows/.github/workflows/linting.yml@main
     with:
-      # set pylint-version to empty string to skip the pylint workflow
-      pylint-version: ''
       VALIDATE_JAVASCRIPT_STANDARD: false
       BASH_SEVERITY: 'warning'
