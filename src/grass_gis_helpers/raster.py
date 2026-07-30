@@ -29,7 +29,7 @@ def adjust_raster_resolution(
     raster_name,
     output,
     res,
-    interp_method="bilinear",
+    interp_method="bicubic",
     type=None,
 ):
     """Resample or inpolate raster to given resolution. It is important that
@@ -41,7 +41,7 @@ def adjust_raster_resolution(
         output (str): The name for the resampled/interpolated raster map
         res (float): The resolution to which the raster should be resampled.
         interp_method (str): Interpolation method for resampling.
-                             Defaults to "bilinear".
+                             Defaults to "bicubic".
         type (str, optional): Raster type. If type="CELL" the rasampled raster
                               values will be rounded to integer values.
                               Defaults to None.
