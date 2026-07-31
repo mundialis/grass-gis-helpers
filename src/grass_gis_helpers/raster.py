@@ -73,7 +73,7 @@ def adjust_raster_resolution(
             overwrite=True,
         )
     else:
-        rename_raster(raster_name, output)
+        vrt_to_raster(raster_name, output)
     if resamp_out != output:
         grass.run_command(
             "r.mapcalc",
@@ -90,7 +90,7 @@ def adjust_raster_resolution(
         )
 
 
-def create_vrt(input_raster_list, output):
+def create_vrt(input_raster_list, output, copy_raster_maps=True):
     """Create a VRT raster map out of input list, or renaming if only one
     raster is inside the list. If the input raster maps are inside other
     mapsets they will be copied to the current mapset before the VRT will be
@@ -99,11 +99,13 @@ def create_vrt(input_raster_list, output):
     Args:
         input_raster_list (list): List with input raster maps
         output (str): Name of the output (vrt) raster map
+        copy_raster_maps (boolean): Flag if raster maps from different mapsets
+                                    should be copied (Default: True)
 
     """
     # copy raster maps to current mapset
     for rast in input_raster_list:
-        if "@" in rast:
+        if "@" in rast and copy_raster_maps:
             rast_wo_mapsetname = rast.split("@")[0]
             grass.run_command(
                 "g.copy",
@@ -142,4 +144,23 @@ def rename_raster(band_name_old, band_name_new):
         raster=f"{band_name_old},{band_name_new}",
         quiet=True,
         overwrite=True,
+    )
+
+
+def vrt_to_raster(vrt_input, raster_output):
+    """Computing raster map from VRT.
+
+    Args:
+        vrt_input (str): Input VRT
+        raster_output (str): Created output raster map
+
+    """
+    grass.run_command(
+        "g.region",
+        raster=vrt_input,
+    )
+    grass.run_command(
+        "r.mapcalc",
+        expression=f"{raster_output} = {vrt_input}",
+        quiet=True,
     )
