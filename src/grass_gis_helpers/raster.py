@@ -105,13 +105,12 @@ def create_vrt(input_raster_list, output, copy_raster_maps=True):
     """
     # copy raster maps to current mapset
     for rast in input_raster_list:
-        if copy_raster_maps:
-            if "@" in rast:
-                rast_wo_mapsetname = rast.split("@")[0]
-                grass.run_command(
-                    "g.copy",
-                    raster=f"{rast},{rast_wo_mapsetname}",
-                )
+        if "@" in rast and copy_raster_maps:
+            rast_wo_mapsetname = rast.split("@")[0]
+            grass.run_command(
+                "g.copy",
+                raster=f"{rast},{rast_wo_mapsetname}",
+            )
     input_raster_list = [val.split("@")[0] for val in input_raster_list]
     # buildvrt if required + renaming to output name
     if len(input_raster_list) > 1:
@@ -152,8 +151,8 @@ def vrt_to_raster(vrt_input, raster_output):
     """Computing raster map from VRT.
 
     Args:
-        band_name_old (str): Raster map name to rename
-        band_name_new (str): The new name for the raster map
+        vrt_input (str): Input VRT
+        raster_output (str): Created output raster map
 
     """
     grass.run_command(
