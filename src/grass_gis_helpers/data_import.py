@@ -33,7 +33,7 @@ import grass.script as grass
 
 from .cleanup import rm_vects
 from .general import communicate_grass_command
-from .raster import adjust_raster_resolution, rename_raster
+from .raster import rename_raster
 from .vector import patch_vectors
 
 
@@ -137,20 +137,18 @@ def import_local_raster_data(
     aoi,
     basename,
     local_data_dir,
-    native_res_flag,
     all_raster,
     rm_rasters,
     band_dict=None,
 ):
-    """Import local raster data. Where a VRT or TIFs are given in the directory
-    of "local_data_dir".
+    """Import local raster data with native resolution.
+    Where a VRT or TIFs are given in the directory of "local_data_dir".
 
     Args:
         aoi (str): Vector map with area of interest
         basename (str): Basename for imported rasters
         local_data_dir (str): Path to local data directory with VRT or TIF
                               files inside
-        native_res_flag (bool): True if native data resolution should be used
         all_raster (list/dict): Empty list/dictionary where the imported rasters
                                 will be appended
         rm_rasters (list): List with rasters which should be removed
@@ -213,9 +211,6 @@ def import_local_raster_data(
             "quiet": True,
             "overwrite": True,
         }
-        # resolution settings: -r native resolution; otherwise from region
-        if not native_res_flag:
-            kwargs["resolution"] = "region"
         r_import = communicate_grass_command("r.import", **kwargs)
         err_m1 = "Input raster does not overlap current computational region."
         err_m2 = "already exists and will be overwritten"
@@ -229,15 +224,12 @@ def import_local_raster_data(
         elif stderr_val != "":
             grass.fatal(_(stderr_val))
 
-        # resample / interpolate data
+        # rename bands if necessary
         for band_num, band in band_dict.items():
             band_name_old = f"{name}.{band_num}" if band_num != "" else name
             band_name_new = f"{name}.{band}" if band_num != "" else name
             rm_rasters.append(band_name_old)
-            # check resolution and resample if needed
-            if not native_res_flag:
-                adjust_raster_resolution(band_name_old, band_name_new, ns_res)
-            else:
+            if band_name_old != band_name_new:
                 rename_raster(band_name_old, band_name_new)
             if isinstance(all_raster, dict):
                 all_raster[band].append(band_name_new)
