@@ -93,7 +93,6 @@ def import_administrative_boundaries(output, aoi=None, level="KRS"):
     )
     # file of administrative boundaries in zip
     filename = os.path.join(
-        "vg5000_01-01.utm32s.shape.ebenen",
         "vg5000_ebenen_0101",
         f"VG5000_{level}.shp",
     )
