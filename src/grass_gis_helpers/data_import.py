@@ -232,7 +232,7 @@ def import_local_raster_data(
                 "g.list",
                 type="raster",
                 pattern=f"{name}*",
-            ).keys()
+            ).keys(),
         )
 
         # rename bands if necessary
