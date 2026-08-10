@@ -214,7 +214,7 @@ def import_local_raster_data(
             "overwrite": True,
         }
         r_import = communicate_grass_command("r.import", **kwargs)
-        if rm_groups:
+        if rm_groups is not None:
             rm_groups.append(name)
         err_m1 = "Input raster does not overlap current computational region."
         err_m2 = "already exists and will be overwritten"
@@ -237,13 +237,13 @@ def import_local_raster_data(
 
         # rename bands if necessary
         for idx, (band_num, band) in enumerate(band_dict.items()):
-            # Append all original imported rasters once
-            # (including renamed (band_name_old),
-            # and not needed/used bands at all)
-            if idx == 0:
-                rm_rasters.extend(all_imported_rast)
             band_name_old = f"{name}.{band_num}" if band_num != "" else name
             band_name_new = f"{name}.{band}" if band_num != "" else name
+            # If band_dict given, append all original imported rasters once
+            # (including renamed (band_name_old),
+            # and not needed/used bands at all)
+            if band_name_new != band_name_old and idx == 0:
+                rm_rasters.extend(all_imported_rast)
             if band_name_old != band_name_new:
                 rename_raster(band_name_old, band_name_new)
             if isinstance(all_raster, dict):
