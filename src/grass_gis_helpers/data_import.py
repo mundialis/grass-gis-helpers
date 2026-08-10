@@ -33,7 +33,7 @@ import grass.script as grass
 
 from .cleanup import rm_vects
 from .general import communicate_grass_command
-from .raster import adjust_raster_resolution, rename_raster
+from .raster import rename_raster
 from .vector import patch_vectors
 
 
@@ -137,23 +137,23 @@ def import_local_raster_data(
     aoi,
     basename,
     local_data_dir,
-    native_res_flag,
     all_raster,
     rm_rasters,
+    rm_groups=None,
     band_dict=None,
 ):
-    """Import local raster data. Where a VRT or TIFs are given in the directory
-    of "local_data_dir".
+    """Import local raster data with native resolution.
+    Where a VRT or TIFs are given in the directory of "local_data_dir".
 
     Args:
         aoi (str): Vector map with area of interest
         basename (str): Basename for imported rasters
         local_data_dir (str): Path to local data directory with VRT or TIF
                               files inside
-        native_res_flag (bool): True if native data resolution should be used
         all_raster (list/dict): Empty list/dictionary where the imported rasters
                                 will be appended
         rm_rasters (list): List with rasters which should be removed
+        rm_groups (list): List with groups which should be removed (optional)
         band_dict (dict): Dictionary with band number and names, if none only
                           one band should be in the files which should be
                           imported; e.g. for DOP import band_dict = {
@@ -213,10 +213,9 @@ def import_local_raster_data(
             "quiet": True,
             "overwrite": True,
         }
-        # resolution settings: -r native resolution; otherwise from region
-        if not native_res_flag:
-            kwargs["resolution"] = "region"
         r_import = communicate_grass_command("r.import", **kwargs)
+        if rm_groups is not None:
+            rm_groups.append(name)
         err_m1 = "Input raster does not overlap current computational region."
         err_m2 = "already exists and will be overwritten"
         stderr_val = r_import[1]
@@ -228,16 +227,24 @@ def import_local_raster_data(
             pass
         elif stderr_val != "":
             grass.fatal(_(stderr_val))
+        all_imported_rast = list(
+            grass.parse_command(
+                "g.list",
+                type="raster",
+                pattern=f"{name}*",
+            ).keys(),
+        )
 
-        # resample / interpolate data
-        for band_num, band in band_dict.items():
+        # rename bands if necessary
+        for idx, (band_num, band) in enumerate(band_dict.items()):
             band_name_old = f"{name}.{band_num}" if band_num != "" else name
             band_name_new = f"{name}.{band}" if band_num != "" else name
-            rm_rasters.append(band_name_old)
-            # check resolution and resample if needed
-            if not native_res_flag:
-                adjust_raster_resolution(band_name_old, band_name_new, ns_res)
-            else:
+            # If band_dict given, append all original imported rasters once
+            # (including renamed (band_name_old),
+            # and not needed/used bands at all)
+            if band_name_new != band_name_old and idx == 0:
+                rm_rasters.extend(all_imported_rast)
+            if band_name_old != band_name_new:
                 rename_raster(band_name_old, band_name_new)
             if isinstance(all_raster, dict):
                 all_raster[band].append(band_name_new)
