@@ -139,7 +139,7 @@ def import_local_raster_data(
     local_data_dir,
     all_raster,
     rm_rasters,
-    rm_groups,
+    rm_groups=None,
     band_dict=None,
 ):
     """Import local raster data with native resolution.
@@ -153,6 +153,7 @@ def import_local_raster_data(
         all_raster (list/dict): Empty list/dictionary where the imported rasters
                                 will be appended
         rm_rasters (list): List with rasters which should be removed
+        rm_groups (list): List with groups which should be removed (optional)
         band_dict (dict): Dictionary with band number and names, if none only
                           one band should be in the files which should be
                           imported; e.g. for DOP import band_dict = {
@@ -213,7 +214,8 @@ def import_local_raster_data(
             "overwrite": True,
         }
         r_import = communicate_grass_command("r.import", **kwargs)
-        rm_groups.append(name)
+        if rm_groups:
+            rm_groups.append(name)
         err_m1 = "Input raster does not overlap current computational region."
         err_m2 = "already exists and will be overwritten"
         stderr_val = r_import[1]
