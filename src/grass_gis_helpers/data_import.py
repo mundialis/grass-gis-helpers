@@ -225,11 +225,13 @@ def import_local_raster_data(
             pass
         elif stderr_val != "":
             grass.fatal(_(stderr_val))
-        all_imported_rast = list(grass.parse_command(
-            "g.list",
-            type="raster",
-            pattern=f"{name}*",
-        ).keys())
+        all_imported_rast = list(
+            grass.parse_command(
+                "g.list",
+                type="raster",
+                pattern=f"{name}*",
+            ).keys()
+        )
 
         # rename bands if necessary
         for idx, (band_num, band) in enumerate(band_dict.items()):
