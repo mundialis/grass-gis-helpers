@@ -151,3 +151,32 @@ def check_installed_addon(addon, url="..."):
             f"g.extension {addon} url={url}"
         )
         grass.fatal(_(msg))
+
+
+def valid_grass_map_name(mapname: str) -> str:
+    """Converts given string into a valid GRASS GIS map name.
+
+    Replacing invalid characters with appropriate substitutes.
+
+    Args:
+        mapname (str): String to be converted into a valid GRASS GIS map name.
+
+    Returns:
+        mapname (str): String that conforms to GRASS GIS naming conventions.
+
+    """
+    character_mapping = {
+        "ä": "ae",
+        "ö": "oe",
+        "ü": "ue",
+        "Ä": "Ae",
+        "Ö": "Oe",
+        "Ü": "Ue",
+        "ß": "ss",
+        ".": "_",
+        "-": "_",
+        " ": "_",
+    }
+    for k, v in character_mapping.items():
+        mapname = mapname.replace(k, v)
+    return mapname
