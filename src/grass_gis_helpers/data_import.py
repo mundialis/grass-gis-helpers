@@ -469,6 +469,158 @@ def import_local_xyz_files(
     return imported_local_data
 
 
+def import_single_local_las_file(
+    las_file,
+    output,
+    res,
+    use_cur_reg=False,
+    separator="space",
+    skip=0,
+):
+    """Import single las/laz file.
+
+    Args:
+        las_file (str): las/laz file path to import
+        output (str): Output raster file name
+        res (float): resolution to import
+        use_cur_reg (bool): If True the las/laz file will only be imported if
+                            it overlaps with the current region, otherwise it
+                            will not be imported
+        separator (str): Separator of las/laz file; default is "space"
+        skip (int): Number of rows to skip within las/laz file
+    Returns:
+        output (str): If the output is imported, otherwise return None
+
+    """
+    r_in_pdal_kwargs = {
+        "input": las_file,
+        "output": output,
+        "resolution": res,
+        "type": "FCELL",
+        "method": "percentile",
+        "pth": 95,
+        "quiet": True,
+        "overwrite": True,
+        "flags": "og",
+    }
+    reg_extent_laz = grass.parse_command(
+        "r.in.pdal",
+        **r_in_pdal_kwargs,
+    )
+    reg_laz_split = reg_extent_laz["n"].split(" ")
+    las_reg = {
+        "n": float(reg_laz_split[0]),
+        "s": float(reg_laz_split[1].replace("s=", "")),
+        "e": float(reg_laz_split[2].replace("e=", "")),
+        "w": float(reg_laz_split[3].replace("w=", "")),
+    }
+    # check if aoi overlaps
+    if use_cur_reg:
+        cur_reg = grass.region()
+        if (
+            cur_reg["e"] < las_reg["w"]
+            or las_reg["e"] < cur_reg["w"]
+            or cur_reg["n"] < las_reg["s"]
+            or las_reg["n"] < cur_reg["s"]
+        ):
+            return None
+    # set region
+    grass.run_command(
+        "g.region",
+        n=las_reg["n"],
+        s=las_reg["s"],
+        w=las_reg["w"],
+        e=las_reg["e"],
+        res=res,
+        flags="a",
+    )
+    if use_cur_reg:
+        while (cur_reg["n"] + res) < las_reg["n"]:
+            grass.run_command("g.region", n=f"n-{res}")
+            las_reg["n"] -= res
+        while (cur_reg["s"] - res) > las_reg["s"]:
+            grass.run_command("g.region", s=f"s+{res}")
+            las_reg["s"] += res
+        while (cur_reg["e"] + res) < las_reg["e"]:
+            grass.run_command("g.region", e=f"e-{res}")
+            las_reg["e"] -= res
+        while (cur_reg["w"] - res) > las_reg["w"]:
+            grass.run_command("g.region", w=f"w+{res}")
+            las_reg["w"] += res
+    r_in_pdal_kwargs["flags"] = "o"
+    grass.run_command("r.in.pdal", **r_in_pdal_kwargs)
+
+    return output
+
+
+def import_local_las_files(
+    aoi,
+    basename,
+    local_data_dir,
+    all_raster,
+):
+    """Import local las/laz raster data.
+
+    las/laz files which are inside the directory of "local_data_dir"
+    will be imported for the AOI.
+
+    Args:
+        aoi (str): Vector map with area of interest
+        basename (str): Basename for imported rasters
+        local_data_dir (str): Path to local data directory with las/laz files
+        all_raster (list/dict): empty list/dictionary where the imported
+                                rasters will be appended
+    Returns:
+        imported_local_data (bool): True if local data imported otherwise False
+
+    """
+    grass.message(_("Importing local las/laz data..."))
+    imported_local_data = False
+
+    # get las/laz files
+    las_files = glob.glob(
+        os.path.join(local_data_dir, "**", "*.las"),
+        recursive=True,
+    )
+    if not las_files:
+        las_files = glob.glob(
+            os.path.join(local_data_dir, "**", "*.laz"),
+            recursive=True,
+        )
+
+    # import data for AOI
+    # TODO parallelize local data import
+    # get current region
+    cur_reg = grass.region()
+    ns_res = cur_reg["nsres"]
+    ew_res = cur_reg["ewres"]
+    for i, las_file in enumerate(las_files):
+        # set aoi if it is given with current resolution
+        if aoi and aoi != "":
+            grass.run_command(
+                "g.region",
+                vector=aoi,
+                nsres=ns_res,
+                ewres=ew_res,
+                flags="a",
+                quiet=True,
+            )
+            # grow region because of interpolation
+            grass.run_command("g.region", grow=1, quiet=True)
+        # Import data
+        name = f"{basename}_{i}"
+        name = import_single_local_las_file(las_file, name, ns_res, True)
+        if name:
+            all_raster.append(name)
+            grass.message(
+                _(f"las/laz file <{os.path.basename(las_file)}> imported."),
+            )
+    # check if raster were imported
+    if len(all_raster) > 0:
+        imported_local_data = True
+    return imported_local_data
+
+
 def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
     """Import vector data from local file path.
 
