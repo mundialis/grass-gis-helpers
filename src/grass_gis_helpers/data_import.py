@@ -474,8 +474,6 @@ def import_single_local_las_file(
     output,
     res,
     use_cur_reg=False,
-    separator="space",
-    skip=0,
 ):
     """Import single las/laz file.
 
@@ -486,8 +484,6 @@ def import_single_local_las_file(
         use_cur_reg (bool): If True the las/laz file will only be imported if
                             it overlaps with the current region, otherwise it
                             will not be imported
-        separator (str): Separator of las/laz file; default is "space"
-        skip (int): Number of rows to skip within las/laz file
     Returns:
         output (str): If the output is imported, otherwise return None
 
