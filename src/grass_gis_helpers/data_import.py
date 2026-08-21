@@ -203,7 +203,8 @@ def import_local_raster_data(
                 quiet=True,
             )
             # grow region because of interpolation
-            grass.run_command("g.region", grow=1, quiet=True)
+            # Note: assuming bicubic resampling, with 4 x 4 neighborhood
+            grass.run_command("g.region", grow=4, quiet=True)
         # Import data
         name = f"{basename}_{i}"
         kwargs = {
@@ -454,7 +455,8 @@ def import_local_xyz_files(
                 quiet=True,
             )
             # grow region because of interpolation
-            grass.run_command("g.region", grow=1, quiet=True)
+            # Note: assuming bicubic resampling, with 4 x 4 neighborhood
+            grass.run_command("g.region", grow=4, quiet=True)
         # Import data
         name = f"{basename}_{i}"
         name = import_single_local_xyz_file(xyz_file, name, True)
@@ -602,7 +604,8 @@ def import_local_las_files(
                 quiet=True,
             )
             # grow region because of interpolation
-            grass.run_command("g.region", grow=1, quiet=True)
+            # Note: assuming bicubic resampling, with 4 x 4 neighborhood
+            grass.run_command("g.region", grow=4, quiet=True)
         # Import data
         name = f"{basename}_{i}"
         name = import_single_local_las_file(las_file, name, ns_res, True)
