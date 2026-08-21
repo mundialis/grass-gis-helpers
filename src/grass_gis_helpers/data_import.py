@@ -523,14 +523,10 @@ def import_single_local_las_file(
         ):
             return None
     if use_cur_reg:
-        if cur_reg["n"] < las_reg["n"]:
-            las_reg["n"] = cur_reg["n"]
-        if cur_reg["s"] > las_reg["s"]:
-            las_reg["s"] = cur_reg["s"]
-        if cur_reg["e"] < las_reg["e"]:
-            las_reg["e"] = cur_reg["e"]
-        if cur_reg["w"] > las_reg["w"]:
-            las_reg["w"] = cur_reg["w"]
+        las_reg["n"] = min(las_reg["n"], cur_reg["n"])
+        las_reg["s"] = max(las_reg["s"], cur_reg["s"])
+        las_reg["e"] = min(las_reg["e"], cur_reg["e"])
+        las_reg["w"] = max(las_reg["w"], cur_reg["w"])
     # set region
     grass.run_command(
         "g.region",
