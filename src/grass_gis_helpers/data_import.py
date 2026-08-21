@@ -507,10 +507,10 @@ def import_single_local_las_file(
     )
     reg_laz_split = reg_extent_laz["n"].split(" ")
     las_reg = {
-        "n": float(reg_laz_split[0]),
-        "s": float(reg_laz_split[1].replace("s=", "")),
-        "e": float(reg_laz_split[2].replace("e=", "")),
-        "w": float(reg_laz_split[3].replace("w=", "")),
+        "n": round(float(reg_laz_split[0]) / res) * res,
+        "s": round(float(reg_laz_split[1].replace("s=", "")) / res) * res,
+        "e": round(float(reg_laz_split[2].replace("e=", "")) / res) * res,
+        "w": round(float(reg_laz_split[3].replace("w=", "")) / res) * res,
     }
     # check if aoi overlaps
     if use_cur_reg:
@@ -522,6 +522,15 @@ def import_single_local_las_file(
             or las_reg["n"] < cur_reg["s"]
         ):
             return None
+    if use_cur_reg:
+        if cur_reg["n"] < las_reg["n"]:
+            las_reg["n"] = cur_reg["n"]
+        if cur_reg["s"] > las_reg["s"]:
+            las_reg["s"] = cur_reg["s"]
+        if cur_reg["e"] < las_reg["e"]:
+            las_reg["e"] = cur_reg["e"]
+        if cur_reg["w"] > las_reg["w"]:
+            las_reg["w"] = cur_reg["w"]
     # set region
     grass.run_command(
         "g.region",
@@ -532,19 +541,6 @@ def import_single_local_las_file(
         res=res,
         flags="a",
     )
-    if use_cur_reg:
-        while (cur_reg["n"] + res) < las_reg["n"]:
-            grass.run_command("g.region", n=f"n-{res}")
-            las_reg["n"] -= res
-        while (cur_reg["s"] - res) > las_reg["s"]:
-            grass.run_command("g.region", s=f"s+{res}")
-            las_reg["s"] += res
-        while (cur_reg["e"] + res) < las_reg["e"]:
-            grass.run_command("g.region", e=f"e-{res}")
-            las_reg["e"] -= res
-        while (cur_reg["w"] - res) > las_reg["w"]:
-            grass.run_command("g.region", w=f"w+{res}")
-            las_reg["w"] += res
     r_in_pdal_kwargs["flags"] = "o"
     grass.run_command("r.in.pdal", **r_in_pdal_kwargs)
 
