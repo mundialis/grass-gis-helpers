@@ -10,9 +10,10 @@
 #
 # COPYRIGHT:	(C) 2024 by mundialis and the GRASS Development Team
 #
-# 		This program is free software under the GNU General Public
-# 		License (>=v2). Read the file COPYING that comes with GRASS
-# 		for details.
+# SPDX-FileCopyrightText: 2024 Anika Weinmann
+# SPDX-FileCopyrightText: 2024 mundialis GmbH & Co. KG and the GRASS
+#                         Development Team
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 #############################################################################
 

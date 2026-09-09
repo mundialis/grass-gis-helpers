@@ -8,7 +8,7 @@
 #              import modules
 # SPDX-FileCopyrightText: (c) 2026 by mundialis GmbH & Co. KG and the
 #                             GRASS Development Team
-# SPDX-License-Identifier: GPL-3.0-or-later.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 ############################################################################
 
