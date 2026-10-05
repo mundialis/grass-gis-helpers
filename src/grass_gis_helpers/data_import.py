@@ -128,6 +128,42 @@ def get_list_of_tindex_locations(tindex, aoi=None):
     return tiles
 
 
+def get_files_from_tindices(tindices, aoi=None):
+    """Get the files from the tindices which overlap with the AOI or the
+    current region.
+
+    Args:
+        tindex (str): Name of the tindex vector map
+        aoi (str): Name of the AOI vector map
+    Returns:
+        (list): List with files which overlap with the AOI or the current region
+
+    """
+    files = []
+    for tindex in tindices:
+        tindex_vect = os.path.basename(tindex).replace(".gpkg", "")
+        grass.run_command(
+            "v.import",
+            input=tindex,
+            output=tindex_vect,
+            extent="region",
+            overwrite=True,
+            quiet=True,
+        )
+        try:
+            tiles = get_list_of_tindex_locations(tindex_vect, aoi)
+            # check if tiles path is absolute
+            if not os.path.isabs(tiles[0]):
+                tiles = [
+                    os.path.join(os.path.dirname(tindex), tile)
+                    for tile in tiles
+                ]
+        except:
+            tiles = []
+        files.extend(tiles)
+    return files
+
+
 def import_local_raster_data(
     aoi,
     basename,
@@ -164,21 +200,30 @@ def import_local_raster_data(
     imported_local_data = False
     if band_dict is None:
         band_dict = {"": ""}
-    # get files (VRT if available otherwise TIF)
-    raster_files = glob.glob(
-        os.path.join(local_data_dir, "**", "*.vrt"),
+    # get files from tile index if available, otherwise get all files from
+    # local_data_dir
+    tindex_files = glob.glob(
+        os.path.join(local_data_dir, "**", "*index*.gpkg"),
         recursive=True,
     )
-    if not raster_files:
+    if tindex_files:
+        raster_files = get_files_from_tindices(tindex_files, aoi)
+    else:
+        # get files (VRT if available otherwise TIF)
         raster_files = glob.glob(
-            os.path.join(local_data_dir, "**", "*.tif"),
+            os.path.join(local_data_dir, "**", "*.vrt"),
             recursive=True,
         )
-    if not raster_files:
-        raster_files = glob.glob(
-            os.path.join(local_data_dir, "**", "*.jp2"),
-            recursive=True,
-        )
+        if not raster_files:
+            raster_files = glob.glob(
+                os.path.join(local_data_dir, "**", "*.tif"),
+                recursive=True,
+            )
+        if not raster_files:
+            raster_files = glob.glob(
+                os.path.join(local_data_dir, "**", "*.jp2"),
+                recursive=True,
+            )
 
     # get current region
     cur_reg = grass.region()
@@ -214,12 +259,15 @@ def import_local_raster_data(
             rm_groups.append(name)
         err_m1 = "Input raster does not overlap current computational region."
         err_m2 = "already exists and will be overwritten"
+        war_m3 = "Memory not allocated"
         stderr_val = r_import[1]
         if isinstance(stderr_val, bytes):
             stderr_val = stderr_val.decode()
         if err_m1 in stderr_val:
             continue
-        if err_m2 in stderr_val:
+        if err_m2 in stderr_val or (
+            war_m3 in stderr_val and "Warning" in stderr_val
+        ):
             pass
         elif stderr_val != "":
             grass.fatal(_(stderr_val))
@@ -254,6 +302,16 @@ def import_local_raster_data(
     elif len(all_raster) > 0:
         imported_local_data = True
 
+    # reset region
+    grass.run_command(
+        "g.region",
+        n=cur_reg["n"],
+        s=cur_reg["s"],
+        w=cur_reg["w"],
+        e=cur_reg["e"],
+        nsres=ns_res,
+        ewres=ew_res,
+    )
     return imported_local_data
 
 
