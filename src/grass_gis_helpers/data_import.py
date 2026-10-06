@@ -303,16 +303,6 @@ def import_local_raster_data(
     elif len(all_raster) > 0:
         imported_local_data = True
 
-    # reset region
-    grass.run_command(
-        "g.region",
-        n=cur_reg["n"],
-        s=cur_reg["s"],
-        w=cur_reg["w"],
-        e=cur_reg["e"],
-        nsres=ns_res,
-        ewres=ew_res,
-    )
     return imported_local_data
 
 
