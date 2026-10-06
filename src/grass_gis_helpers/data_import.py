@@ -27,7 +27,7 @@ import wget
 
 import grass.script as grass
 
-from .cleanup import rm_vects
+from .cleanup import rm_vects, general_cleanup
 from .general import communicate_grass_command
 from .raster import rename_raster
 from .vector import patch_vectors
@@ -198,6 +198,10 @@ def import_local_raster_data(
 
     """
     grass.message(_("Importing local raster data..."))
+    # save current region to reset it after import
+    orig_region = f"orig_region_{grass.tempname(8)}"
+    grass.run_command("g.region", save=orig_region, quiet=True)
+
     imported_local_data = False
     if band_dict is None:
         band_dict = {"": ""}
@@ -303,6 +307,9 @@ def import_local_raster_data(
     elif len(all_raster) > 0:
         imported_local_data = True
 
+    # reset region
+    general_cleanup(orig_region=orig_region)
+
     return imported_local_data
 
 
@@ -391,6 +398,10 @@ def import_single_local_xyz_file(
         output (str): If the output is imported, otherwise return None
 
     """
+    # save current region to reset it after import
+    orig_region = f"orig_region_{grass.tempname(8)}"
+    grass.run_command("g.region", save=orig_region, quiet=True)
+
     res, xyz_reg, shift_needed = get_xyz_file_infos(
         xyz_file,
         separator=separator,
@@ -450,6 +461,8 @@ def import_single_local_xyz_file(
             res=res,
         )
         grass.run_command("r.region", map=output, flags="c")
+    # reset region
+    general_cleanup(orig_region=orig_region)
     return output
 
 
@@ -474,6 +487,10 @@ def import_local_xyz_files(
     """
     grass.message(_("Importing local XYZ data..."))
     imported_local_data = False
+
+    # save current region to reset it after import
+    orig_region = f"orig_region_{grass.tempname(8)}"
+    grass.run_command("g.region", save=orig_region, quiet=True)
 
     # get XYZ files
     xyz_files = glob.glob(
@@ -512,6 +529,8 @@ def import_local_xyz_files(
     # check if raster were imported
     if len(all_raster) > 0:
         imported_local_data = True
+    # reset region
+    general_cleanup(orig_region=orig_region)
     return imported_local_data
 
 
@@ -534,6 +553,10 @@ def import_single_local_las_file(
         output (str): If the output is imported, otherwise return None
 
     """
+    # save current region to reset it after import
+    orig_region = f"orig_region_{grass.tempname(8)}"
+    grass.run_command("g.region", save=orig_region, quiet=True)
+
     r_in_pdal_kwargs = {
         "input": las_file,
         "output": output,
@@ -584,6 +607,8 @@ def import_single_local_las_file(
     r_in_pdal_kwargs["flags"] = "o"
     grass.run_command("r.in.pdal", **r_in_pdal_kwargs)
 
+    # reset region
+    general_cleanup(orig_region=orig_region)
     return output
 
 
@@ -610,6 +635,10 @@ def import_local_las_files(
     """
     grass.message(_("Importing local las/laz data..."))
     imported_local_data = False
+
+    # save current region to reset it after import
+    orig_region = f"orig_region_{grass.tempname(8)}"
+    grass.run_command("g.region", save=orig_region, quiet=True)
 
     # get las/laz files
     las_files = glob.glob(
@@ -653,6 +682,8 @@ def import_local_las_files(
     # check if raster were imported
     if len(all_raster) > 0:
         imported_local_data = True
+    # reset region
+    general_cleanup(orig_region=orig_region)
     return imported_local_data
 
 
@@ -670,6 +701,10 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
 
     """
     imported_local_data = False
+
+    # save current region to reset it after import
+    orig_region = f"orig_region_{grass.tempname(8)}"
+    grass.run_command("g.region", save=orig_region, quiet=True)
 
     # get files (GPKG or SHP)
     files = glob.glob(
@@ -712,4 +747,6 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
     if int(map_info["centroids"]) > 0:
         imported_local_data = True
 
+    # reset region
+    general_cleanup(orig_region=orig_region)
     return imported_local_data
