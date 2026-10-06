@@ -18,6 +18,7 @@
 
 import glob
 import os
+import pathlib
 import subprocess
 from subprocess import PIPE
 import time
@@ -133,7 +134,7 @@ def get_files_from_tindices(tindices, aoi=None):
     current region.
 
     Args:
-        tindex (str): Name of the tindex vector map
+        tindices (list): List of tindex vector maps
         aoi (str): Name of the AOI vector map
     Returns:
         (list): List with files which overlap with the AOI or the current region
@@ -153,12 +154,12 @@ def get_files_from_tindices(tindices, aoi=None):
         try:
             tiles = get_list_of_tindex_locations(tindex_vect, aoi)
             # check if tiles path is absolute
-            if not os.path.isabs(tiles[0]):
+            if not pathlib.Path(tiles[0]).is_absolute():
                 tiles = [
-                    os.path.join(os.path.dirname(tindex), tile)
+                    os.path.join(pathlib.Path(tindex).parent, tile)
                     for tile in tiles
                 ]
-        except:
+        except Exception:
             tiles = []
         files.extend(tiles)
     return files
