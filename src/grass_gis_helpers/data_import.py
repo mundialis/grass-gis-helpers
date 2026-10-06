@@ -175,7 +175,10 @@ def import_local_raster_data(
     band_dict=None,
 ):
     """Import local raster data with native resolution.
-    Where a VRT or TIFs are given in the directory of "local_data_dir".
+    Where a VRT or TIFs or JP2 are given in the directory of "local_data_dir".
+    If a *index*.gpkg file is available in the directory, the raster files will
+    be imported based on the tile index and the AOI.
+
 
     Args:
         aoi (str): Vector map with area of interest
@@ -474,6 +477,8 @@ def import_local_xyz_files(
 ):
     """Import local XYZ raster data.  XYZ files which are inside the
     directory of "local_data_dir" will be imported for the AOI.
+    If a *index*.gpkg file is available in the directory, the XYZ files will
+    be imported based on the tile index and the AOI.
 
     Args:
         aoi (str): Vector map with area of interest
@@ -492,11 +497,20 @@ def import_local_xyz_files(
     orig_region = f"orig_region_{grass.tempname(8)}"
     grass.run_command("g.region", save=orig_region, quiet=True)
 
-    # get XYZ files
-    xyz_files = glob.glob(
-        os.path.join(local_data_dir, "**", "*.xyz"),
+    # get files from tile index if available, otherwise get all files from
+    # local_data_dir
+    tindex_files = glob.glob(
+        os.path.join(local_data_dir, "**", "*index*.gpkg"),
         recursive=True,
     )
+    if tindex_files:
+        xyz_files = get_files_from_tindices(tindex_files, aoi)
+    else:
+        # get XYZ files
+        xyz_files = glob.glob(
+            os.path.join(local_data_dir, "**", "*.xyz"),
+            recursive=True,
+        )
 
     # import data for AOI
     # TODO parallelize local data import
@@ -621,7 +635,9 @@ def import_local_las_files(
     """Import local las/laz raster data.
 
     las/laz files which are inside the directory of "local_data_dir"
-    will be imported for the AOI.
+    will be imported for the AOI. If a *index*.gpkg file is available in the
+    directory, the las/laz files will be imported based on the tile index and
+    the AOI.
 
     Args:
         aoi (str): Vector map with area of interest
@@ -640,16 +656,25 @@ def import_local_las_files(
     orig_region = f"orig_region_{grass.tempname(8)}"
     grass.run_command("g.region", save=orig_region, quiet=True)
 
-    # get las/laz files
-    las_files = glob.glob(
-        os.path.join(local_data_dir, "**", "*.las"),
+    # get files from tile index if available, otherwise get all files from
+    # local_data_dir
+    tindex_files = glob.glob(
+        os.path.join(local_data_dir, "**", "*index*.gpkg"),
         recursive=True,
     )
-    if not las_files:
+    if tindex_files:
+        las_files = get_files_from_tindices(tindex_files, aoi)
+    else:
+        # get las/laz files
         las_files = glob.glob(
-            os.path.join(local_data_dir, "**", "*.laz"),
+            os.path.join(local_data_dir, "**", "*.las"),
             recursive=True,
         )
+        if not las_files:
+            las_files = glob.glob(
+                os.path.join(local_data_dir, "**", "*.laz"),
+                recursive=True,
+            )
 
     # import data for AOI
     # TODO parallelize local data import
