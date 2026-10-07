@@ -100,8 +100,8 @@ def get_list_of_tindex_locations(tindex, aoi=None, column="location"):
         column (str): Name of the attribute column to read from the tindex
                       (e.g. a download URL, or an ID); defaults to "location"
     Returns:
-        (list): List with locations which overlap with the AOI or the current
-                region
+        (list): List with column values of tindex features which overlap with
+                the AOI or the current region
 
     """
     tindex_clipped = f"clipped_tindex_vect_{grass.tempname(8)}"
