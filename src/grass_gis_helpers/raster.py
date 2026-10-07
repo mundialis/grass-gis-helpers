@@ -126,6 +126,33 @@ def create_vrt(input_raster_list, output, copy_raster_maps=True):
         )
 
 
+def clip_raster(input_raster, output, aoi=None, region=None):
+    """Clip the raster (VRT) to a given aoi or region.
+
+    Args:
+        input_raster (str): Name of input raster map
+        output (str): Name of output raster map
+        aoi (str): AOI if given
+        region (str): Region (if no AOI given)
+
+    """
+    if aoi:
+        grass.run_command("g.region", vector=aoi, align=input_raster)
+    elif region:
+        grass.run_command("g.region", region=region, align=input_raster)
+    else:
+        grass.fatal(
+            "Neither 'region' nor 'aoi' is set, but one of them is required",
+        )
+
+    # renaming to output name.
+    grass.run_command(
+        "r.mapcalc",
+        expression=f"{output} = {input_raster}",
+        quiet=True,
+    )
+
+
 def rename_raster(band_name_old, band_name_new):
     """Rename raster map.
 
