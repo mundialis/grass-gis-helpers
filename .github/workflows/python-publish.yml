@@ -4,10 +4,11 @@ on:
   release:
     types: [published]
 
+permissions:
+    contents: write    
+
 jobs:
   publish-python:
-    permissions:
-      contents: write    
     uses: mundialis/github-workflows/.github/workflows/python-publish.yml@main
     # with:
     #   test_pypi: true
