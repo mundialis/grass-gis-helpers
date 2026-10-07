@@ -90,13 +90,15 @@ def download_and_import_tindex(
         os.chdir(cur_dir)
 
 
-def get_list_of_tindex_locations(tindex, aoi=None):
+def get_list_of_tindex_locations(tindex, aoi=None, column="location"):
     """Select the locations of the tindex which overlap with the AOI or the
     current region.
 
     Args:
         tindex (str): Name of the tindex vector map
         aoi (str): Name of the AOI vector map
+        column (str): Name of the attribute column to read from the tindex
+                      (e.g. a download URL, or an ID); defaults to "location"
     Returns:
         (list): List with locations which overlap with the AOI or the current
                 region
@@ -121,7 +123,7 @@ def get_list_of_tindex_locations(tindex, aoi=None):
             val[0]
             for val in grass.vector_db_select(
                 tindex_clipped,
-                columns="location",
+                columns=column,
             )["values"].values()
         ]
     finally:

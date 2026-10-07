@@ -131,7 +131,7 @@ def extract_filename_from_url(url):
     # Extract actual raster filename from zip-packed downloads
     if ".zip" in url_clean:
         match = re.search(
-            r"([^/]+\.(?:tif|tiff|jp2|xyz))(?:/|\.zip|$)",
+            r"([^/]+\.(?:tif|tiff|jp2|xyz|txt))(?:/|\.zip|$)",
             url_clean,
             re.IGNORECASE,
         )
