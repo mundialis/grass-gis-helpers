@@ -4,7 +4,6 @@ on:
   release:
     types: [published]
 
-
 jobs:
   generate-third-party-licenses:
     permissions:
@@ -12,4 +11,3 @@ jobs:
     uses: mundialis/github-workflows/.github/workflows/third-party-licenses.yml@main
     with:
       pyproject: pyproject.toml
-      additional-packages: "libgdal-dev gdal-bin build-essential"
