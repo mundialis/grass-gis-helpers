@@ -4,10 +4,11 @@ on:
   release:
     types: [published]
 
-permissions: {}
 
 jobs:
   generate-third-party-licenses:
+    permissions:
+      contents: write
     uses: mundialis/github-workflows/.github/workflows/third-party-licenses.yml@main
     with:
       pyproject: pyproject.toml
