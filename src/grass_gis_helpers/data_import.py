@@ -32,6 +32,10 @@ from .general import communicate_grass_command
 from .raster import rename_raster
 from .vector import patch_vectors
 
+# For region growing for interpolation
+# Note: assuming maximal lanczos resampling, with 25 pixel neighborhood
+GROW_PX = 25
+
 
 def download_and_import_tindex(
     tindex_url,
@@ -105,6 +109,29 @@ def get_list_of_tindex_locations(tindex, aoi=None, column="location"):
 
     """
     tindex_clipped = f"clipped_tindex_vect_{grass.tempname(8)}"
+    curr_res = grass.region()["nsres"]
+    aoi_buf = f"buffered_aoi_{grass.tempname(8)}"
+    orig_region = f"orig_region_{grass.tempname(8)}"
+    # grow region because of interpolation
+    if aoi:
+        grass.run_command(
+            "v.buffer",
+            input=aoi,
+            output=aoi_buf,
+            distance=curr_res * GROW_PX,
+            quiet=True,
+        )
+    else:
+        grass.run_command(
+            "g.region",
+            save=orig_region,
+        )
+        grass.run_command(
+            "g.region",
+            grow=GROW_PX,
+        )
+
+    # clip tindex to buffered AOI or grown current region
     try:
         v_clip_kwargs = {
             "input": tindex,
@@ -113,12 +140,11 @@ def get_list_of_tindex_locations(tindex, aoi=None, column="location"):
             "quiet": True,
         }
         if aoi:
-            v_clip_kwargs["clip"] = aoi
+            v_clip_kwargs["clip"] = aoi_buf
             v_clip_kwargs["flags"] += "d"
         else:
             v_clip_kwargs["flags"] += "r"
         grass.run_command("v.clip", **v_clip_kwargs)
-        # grass.vector_db_select(tindex_clipped, columns="location")
         tiles = [
             val[0]
             for val in grass.vector_db_select(
@@ -128,6 +154,7 @@ def get_list_of_tindex_locations(tindex, aoi=None, column="location"):
         ]
     finally:
         rm_vects([tindex_clipped])
+        general_cleanup(orig_region=orig_region, rm_vectors=[aoi_buf])
     return tiles
 
 
@@ -252,9 +279,8 @@ def import_local_raster_data(
                 flags="a",
                 quiet=True,
             )
-            # grow region because of interpolation
-            # Note: assuming bicubic resampling, with 4 x 4 neighborhood
-            grass.run_command("g.region", grow=4, quiet=True)
+        # grow region because of interpolation
+        grass.run_command("g.region", grow=GROW_PX, quiet=True)
         # Import data
         name = f"{basename}_{i}"
         kwargs = {
@@ -531,9 +557,8 @@ def import_local_xyz_files(
                 flags="a",
                 quiet=True,
             )
-            # grow region because of interpolation
-            # Note: assuming bicubic resampling, with 4 x 4 neighborhood
-            grass.run_command("g.region", grow=4, quiet=True)
+        # grow region because of interpolation
+        grass.run_command("g.region", grow=GROW_PX, quiet=True)
         # Import data
         name = f"{basename}_{i}"
         name = import_single_local_xyz_file(xyz_file, name, True)
@@ -695,9 +720,8 @@ def import_local_las_files(
                 flags="a",
                 quiet=True,
             )
-            # grow region because of interpolation
-            # Note: assuming bicubic resampling, with 4 x 4 neighborhood
-            grass.run_command("g.region", grow=4, quiet=True)
+        # grow region because of interpolation
+        grass.run_command("g.region", grow=GROW_PX, quiet=True)
         # Import data
         name = f"{basename}_{i}"
         name = import_single_local_las_file(las_file, name, ns_res, True)
@@ -728,11 +752,9 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
 
     """
     imported_local_data = False
-
     # save current region to reset it after import
     orig_region = f"orig_region_{grass.tempname(8)}"
     grass.run_command("g.region", save=orig_region, quiet=True)
-
     # get files (GPKG or SHP)
     files = glob.glob(
         os.path.join(local_data_dir, "**", "*.gpkg"),
@@ -743,7 +765,6 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
         recursive=True,
     )
     files.extend(shp_files)
-
     # import data for AOI
     imported_list = []
     for i, file in enumerate(files):
@@ -761,10 +782,8 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
             quiet=True,
         )
         imported_list.append(f"{output}_{i}")
-
     # patch outputs
     patch_vectors(imported_list, output, rm_vectors)
-
     # check if result has at least one feature
     map_info = grass.parse_command(
         "v.info",
@@ -773,7 +792,6 @@ def import_local_vector_data(aoi_map, local_data_dir, rm_vectors, output):
     )
     if int(map_info["centroids"]) > 0:
         imported_local_data = True
-
     # reset region
     general_cleanup(orig_region=orig_region)
     return imported_local_data
