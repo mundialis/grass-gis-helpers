@@ -34,6 +34,7 @@ from .vector import patch_vectors
 
 # For region growing for interpolation
 # Note: assuming maximal lanczos resampling, with 25 pixel neighborhood
+# see: https://grass.osgeo.org/grass-stable/manuals/r.resamp.interp.html
 GROW_PX = 25
 
 
